@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#5b53e6" />
+    <title>Focusflow — Make tomorrow easier</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#today" aria-label="Focusflow home">
+          <span class="brand-mark">f</span>
+          <span>focusflow</span>
+        </a>
+
+        <button class="plan-button" id="quickPlanButton"><span>+</span> Plan tomorrow</button>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <p class="nav-label">YOUR FLOW</p>
+          <a href="#today" class="nav-link active" data-page="today"><span>◉</span> Today</a>
+          <a href="#calendar" class="nav-link" data-page="calendar"><span>▦</span> Calendar</a>
+          <a href="#inbox" class="nav-link" data-page="inbox"><span>◌</span> Brain dump <em id="inboxCount">0</em></a>
+
+          <p class="nav-label goals-label">GOALS</p>
+          <a href="#daily" class="nav-link" data-page="daily"><span>☀</span> Daily goals</a>
+          <a href="#weekly" class="nav-link" data-page="weekly"><span>◒</span> Weekly goals</a>
+          <a href="#short-term" class="nav-link" data-page="short-term"><span>↗</span> Short-term goals</a>
+          <a href="#long-term" class="nav-link" data-page="long-term"><span>✦</span> Long-term vision</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <button class="nav-link settings-link" data-page="settings"><span>⚙</span> Settings</button>
+          <button class="profile-switcher" id="profileButton" aria-label="Open account menu">
+            <span class="avatar">A</span>
+            <span class="profile-copy"><b id="profileName">Aarav</b><small>Free plan</small></span>
+            <span class="chevron">⌄</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="mobile-header">
+          <button class="icon-button" id="menuButton" aria-label="Open navigation">☰</button>
+          <a class="brand" href="#today"><span class="brand-mark">f</span><span>focusflow</span></a>
+          <button class="icon-button" id="mobilePlanButton" aria-label="Plan tomorrow">+</button>
+        </header>
+        <section id="pageRoot" class="page-root" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="taskModal" aria-hidden="true">
+      <section class="modal task-modal" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow" id="taskModalEyebrow">MAKE A LITTLE PROMISE</p>
+            <h2 id="taskModalTitle">Plan your next move</h2>
+          </div>
+          <button class="close-button" data-close-modal="taskModal" aria-label="Close">×</button>
+        </div>
+        <form id="taskForm">
+          <input type="hidden" id="taskId" />
+          <label class="field-label" for="taskTitle">What will future-you thank you for?</label>
+          <input id="taskTitle" class="large-input" placeholder="e.g. Finish chemistry flashcards" required maxlength="90" />
+          <div class="form-grid">
+            <label>Date<input id="taskDate" type="date" required /></label>
+            <label>Start time<input id="taskStart" type="time" required /></label>
+            <label>Finish by<input id="taskEnd" type="time" required /></label>
+            <label>Energy needed
+              <select id="taskEnergy"><option value="easy">Easy — a warm-up</option><option value="focus" selected>Focus — protect this time</option><option value="deep">Deep — go airplane mode</option></select>
+            </label>
+          </div>
+          <div class="form-grid two-columns">
+            <label>Reminder
+              <select id="taskReminder"><option value="0">At start time</option><option value="5" selected>5 minutes before</option><option value="10">10 minutes before</option><option value="30">30 minutes before</option></select>
+            </label>
+            <label>Belongs to
+              <select id="taskGoal"><option value="Daily life">Daily life</option><option value="Semester sprint">Semester sprint</option><option value="Build my portfolio">Build my portfolio</option><option value="Health & energy">Health & energy</option></select>
+            </label>
+          </div>
+          <label>Make it easier to start <textarea id="taskNotes" placeholder="First tiny step: open the notes and read page one…" maxlength="220"></textarea></label>
+          <div class="notification-note"><span>◌</span><span>We’ll nudge you at the right moment. When it’s time, tap <b>Start</b>; when you’re done, tap <b>Finish</b>.</span></div>
+          <div class="modal-actions">
+            <button type="button" class="text-button danger" id="deleteTaskButton" hidden>Delete task</button>
+            <span class="modal-spacer"></span>
+            <button type="button" class="secondary-button" data-close-modal="taskModal">Cancel</button>
+            <button type="submit" class="primary-button">Save my plan <span>→</span></button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="goalModal" aria-hidden="true">
+      <section class="modal goal-modal" role="dialog" aria-modal="true" aria-labelledby="goalModalTitle">
+        <div class="modal-header"><div><p class="eyebrow">DIRECTION, NOT PRESSURE</p><h2 id="goalModalTitle">Add a goal</h2></div><button class="close-button" data-close-modal="goalModal" aria-label="Close">×</button></div>
+        <form id="goalForm">
+          <input type="hidden" id="goalId" />
+          <label>Goal title<input id="goalTitle" class="large-input" required maxlength="80" placeholder="e.g. Feel calm before finals" /></label>
+          <div class="form-grid two-columns"><label>Horizon<select id="goalType"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="short-term">Short-term</option><option value="long-term">Long-term</option></select></label><label>Target date<input id="goalDate" type="date" /></label></div>
+          <label>Why this matters<textarea id="goalWhy" maxlength="200" placeholder="A reason worth showing up for on the messy days."></textarea></label>
+          <div class="modal-actions"><span class="modal-spacer"></span><button type="button" class="secondary-button" data-close-modal="goalModal">Cancel</button><button type="submit" class="primary-button">Keep this in view <span>→</span></button></div>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="authModal" aria-hidden="true">
+      <section class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <button class="close-button floating-close" data-close-modal="authModal" aria-label="Close">×</button>
+        <div class="auth-symbol">f</div><p class="eyebrow">WELCOME TO YOUR CALMER TOMORROW</p><h2 id="authTitle">Keep your promises in one place.</h2>
+        <p class="auth-subtitle">Sign in to sync your plans across devices. This demo keeps your data safely in this browser.</p>
+        <form id="authForm"><label>Email<input id="authEmail" type="email" required placeholder="you@example.com" /></label><label>First name<input id="authName" required maxlength="30" placeholder="Aarav" /></label><button class="primary-button full-button" type="submit">Continue with email <span>→</span></button></form>
+        <p class="auth-footnote">No guilt trips. Just good reminders.</p>
+      </section>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="assertive"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
