@@ -1,120 +1,761 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#5b53e6" />
-    <title>Focusflow — Make tomorrow easier</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <aside class="sidebar" id="sidebar">
-        <a class="brand" href="#today" aria-label="Focusflow home">
-          <span class="brand-mark">f</span>
-          <span>focusflow</span>
-        </a>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FocusFlow - Make tomorrow easier on yourself</title>
+  <meta name="description" content="A calm task manager for people whose brains have too many tabs open. Capture the thought, start the two-minute version, protect the next 25 minutes." />
+  <meta name="theme-color" content="#f7f4ee" />
+  <meta property="og:title" content="FocusFlow - Make tomorrow easier on yourself" />
+  <meta property="og:description" content="A calm task manager for people whose brains have too many tabs open. Capture the thought, start the two-minute version, protect the next 25 minutes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kripadevi1417.github.io/focusflow/" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-view="landing">
 
-        <button class="plan-button" id="quickPlanButton"><span>+</span> Plan tomorrow</button>
+<div class="landing" id="landing">
+  <header class="site-nav">
+    <a class="brand" href="#/welcome"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+    <nav class="site-links" aria-label="Primary">
+      <a href="#why">Why</a>
+      <a href="#features">Features</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="site-actions">
+      <button class="link-button" data-open-auth>Sign in</button>
+      <button class="btn btn-primary btn-sm" data-open-auth>Start free</button>
+    </div>
+  </header>
 
-        <nav class="main-nav" aria-label="Main navigation">
-          <p class="nav-label">YOUR FLOW</p>
-          <a href="#today" class="nav-link active" data-page="today"><span>◉</span> Today</a>
-          <a href="#calendar" class="nav-link" data-page="calendar"><span>▦</span> Calendar</a>
-          <a href="#inbox" class="nav-link" data-page="inbox"><span>◌</span> Brain dump <em id="inboxCount">0</em></a>
-
-          <p class="nav-label goals-label">GOALS</p>
-          <a href="#daily" class="nav-link" data-page="daily"><span>☀</span> Daily goals</a>
-          <a href="#weekly" class="nav-link" data-page="weekly"><span>◒</span> Weekly goals</a>
-          <a href="#short-term" class="nav-link" data-page="short-term"><span>↗</span> Short-term goals</a>
-          <a href="#long-term" class="nav-link" data-page="long-term"><span>✦</span> Long-term vision</a>
-        </nav>
-
-        <div class="sidebar-bottom">
-          <button class="nav-link settings-link" data-page="settings"><span>⚙</span> Settings</button>
-          <button class="profile-switcher" id="profileButton" aria-label="Open account menu">
-            <span class="avatar">A</span>
-            <span class="profile-copy"><b id="profileName">Aarav</b><small>Free plan</small></span>
-            <span class="chevron">⌄</span>
-          </button>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="dot"></span> A calmer way to get things done</p>
+        <h1>Make tomorrow <em>easier</em> on yourself.</h1>
+        <p class="lede">FocusFlow is a task manager for people whose brains have too many tabs open. Catch the thought, shrink it to the two-minute version, and protect the next 25 minutes.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-open-auth>Start free - no card</button>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
-      </aside>
-
-      <main class="main-content">
-        <header class="mobile-header">
-          <button class="icon-button" id="menuButton" aria-label="Open navigation">☰</button>
-          <a class="brand" href="#today"><span class="brand-mark">f</span><span>focusflow</span></a>
-          <button class="icon-button" id="mobilePlanButton" aria-label="Plan tomorrow">+</button>
-        </header>
-        <section id="pageRoot" class="page-root" aria-live="polite"></section>
-      </main>
-    </div>
-
-    <div class="modal-backdrop" id="taskModal" aria-hidden="true">
-      <section class="modal task-modal" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
-        <div class="modal-header">
-          <div>
-            <p class="eyebrow" id="taskModalEyebrow">MAKE A LITTLE PROMISE</p>
-            <h2 id="taskModalTitle">Plan your next move</h2>
-          </div>
-          <button class="close-button" data-close-modal="taskModal" aria-label="Close">×</button>
+        <p class="hero-trust">Google or email sign-in. Your history stays yours.</p>
+        <div class="hero-proof">
+          <div class="proof-avatars" aria-hidden="true"><span>K</span><span>M</span><span>A</span></div>
+          <p><b>Built for students and deep workers</b><br />Every day becomes a record: what moved, and what is next.</p>
         </div>
-        <form id="taskForm">
-          <input type="hidden" id="taskId" />
-          <label class="field-label" for="taskTitle">What will future-you thank you for?</label>
-          <input id="taskTitle" class="large-input" placeholder="e.g. Finish chemistry flashcards" required maxlength="90" />
-          <div class="form-grid">
-            <label>Date<input id="taskDate" type="date" required /></label>
-            <label>Start time<input id="taskStart" type="time" required /></label>
-            <label>Finish by<input id="taskEnd" type="time" required /></label>
-            <label>Energy needed
-              <select id="taskEnergy"><option value="easy">Easy — a warm-up</option><option value="focus" selected>Focus — protect this time</option><option value="deep">Deep — go airplane mode</option></select>
-            </label>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="mock-card mock-today">
+          <div class="mock-head"><span class="mock-dot"></span><span>Tuesday &middot; Today</span><span class="mock-pill">2 of 5 done</span></div>
+          <ul class="mock-list">
+            <li class="is-done"><span class="mock-check">&#10003;</span><s>Reply to professor</s><small>9:10</small></li>
+            <li class="is-live"><span class="mock-check"></span><div><b>Finish chapter 4 notes</b><small>25 min &middot; in progress</small></div><span class="mock-tag">Now</span></li>
+            <li><span class="mock-check"></span><span>Draft the intro paragraph</span><small>15 min</small></li>
+            <li><span class="mock-check"></span><span>Walk without headphones</span><small>10 min</small></li>
+          </ul>
+          <div class="mock-foot"><span class="mock-flame">&#9679;</span><span>6-day streak</span><span class="mock-spacer"></span><span>1h 40m focused</span></div>
+        </div>
+        <div class="mock-card mock-ring">
+          <div class="mock-ring-dial">24:18</div>
+          <p>Deep work</p>
+          <small>Shield on &middot; phone away</small>
+        </div>
+        <div class="mock-card mock-urge">
+          <div class="mock-head"><span class="mock-dot"></span><span>Urge log</span></div>
+          <b>&ldquo;Just one quick scroll.&rdquo;</b>
+          <small>Noticed, named, left alone. That is a rep.</small>
+        </div>
+      </div>
+    </section>
+
+    <div class="stat-strip">
+      <div><b>2.5h</b><span>Daily screen time is where mood and sleep start to slide - risk climbs about 15% per extra hour.</span></div>
+      <div><b>$4.4B</b><span>Projected study-planner market by 2034, growing 11% a year. People are actively looking.</span></div>
+      <div><b>$2</b><span>Start with Plus. Less than one coffee a month for a calmer week.</span></div>
+    </div>
+
+    <section class="section" id="why">
+      <div class="section-head">
+        <p class="eyebrow"><span class="dot"></span> Why focus apps fail</p>
+        <h2>You do not need another list.<br />You need a way back to the task.</h2>
+        <p class="section-sub">Most tools are built for people who are already organized. FocusFlow is built for the rest of us: the ones who care, get overwhelmed, and start again tomorrow.</p>
+      </div>
+      <div class="problem-grid">
+        <article class="problem-card"><span class="problem-num">01</span><h3>The plan dies by 10am</h3><p>You wrote a schedule for a perfect person with a perfect morning. Then life happened, and the whole list turned into a debt.</p><span class="problem-fix">Fix: one task, one first step, one session.</span></article>
+        <article class="problem-card"><span class="problem-num">02</span><h3>Too many tabs, in your head</h3><p>The moment you sit down, five reminders arrive. You spend the focus window deciding what to do instead of doing it.</p><span class="problem-fix">Fix: a brain dump that holds it so you do not have to.</span></article>
+        <article class="problem-card"><span class="problem-num">03</span><h3>Willpower gets the blame</h3><p>You are not lazy. You are sitting next to a machine engineered to interrupt you, with no fence around the next 25 minutes.</p><span class="problem-fix">Fix: a fullscreen shield and a clock you cannot ignore.</span></article>
+        <article class="problem-card"><span class="problem-num">04</span><h3>Progress that leaves no trace</h3><p>You worked hard all week and still feel like nothing happened. The evidence was never written down.</p><span class="problem-fix">Fix: a daily record of what moved, and what is next.</span></article>
+        <article class="problem-card"><span class="problem-num">05</span><h3>Built for someone else&rsquo;s job</h3><p>Boards, sprints, stakeholders, $17 a month. You are a student with a paper due, not a product team.</p><span class="problem-fix">Fix: student-priced, calm, and honest about limits.</span></article>
+        <article class="problem-card"><span class="problem-num">06</span><h3>Guilt makes you avoid the app</h3><p>Missed days turn red. Red makes you close the tab. Closing the tab makes you miss more.</p><span class="problem-fix">Fix: no shame, and a record that survives a missed day.</span></article>
+      </div>
+    </section>
+
+    <section class="section features" id="features">
+      <div class="section-head">
+        <p class="eyebrow"><span class="dot"></span> The feature set</p>
+        <h2>Capture. Start. Protect.<br />Recover. Reflect. Aim.</h2>
+        <p class="section-sub">Six moves that cover the whole loop - from the thought arriving to the evidence that you showed up.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card"><div class="feature-icon">&#9998;</div><h3>Brain dump inbox</h3><p>Park a thought in two seconds. Later, promote it into a real task with one tap. Nothing is lost, nothing nags.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#9201;</div><h3>Start in one tap</h3><p>The hardest part is beginning. Pick one task, press start, and the clock takes over before your brain can negotiate.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#9635;</div><h3>Fullscreen shield</h3><p>One screen, one clock, one task. The tab title counts down, so leaving the tab still costs you attention.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#9834;</div><h3>25 / 50 / 90 sessions</h3><p>Short reps or deep blocks, with an optional low brown-noise soundscape so silence stops being loud.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#8635;</div><h3>Urge log</h3><p>Log the impulse instead of obeying it. Naming an urge is the skill; every log is a rep you can see.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#9776;</div><h3>Daily journal</h3><p>Each day keeps its own page: minutes focused, tasks moved, and one line for future-you. History you can trust.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#9679;</div><h3>A streak without shame</h3><p>It counts the days you showed up - no red, no debt. A missed day resets the count, not your record; the next session starts it again.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#9636;</div><h3>7 / 30-day insights</h3><p>See your strongest day, your honest average, and the urges you caught. Patterns, not perfection.</p></article>
+        <article class="feature-card"><div class="feature-icon">&#8593;</div><h3>Goal ladder</h3><p>Big direction, small next step. Goals hold the why; today holds the two-minute version of the what.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="split-section">
+        <div class="split-copy">
+          <p class="eyebrow"><span class="dot"></span> How it works</p>
+          <h2>The next 25 minutes are sacred. Everything else is admin.</h2>
+          <p>FocusFlow does not try to run your whole life. It gets the thought out of your head, shrinks the task until starting is easy, and then protects one block of attention.</p>
+          <ul class="check-list compact">
+            <li>Capture the thought before it becomes background anxiety.</li>
+            <li>Pick one task. The rest wait, visibly, in the list.</li>
+            <li>Hit shield: fullscreen, one clock, tab title counting down.</li>
+            <li>Log the urge when it arrives - noticing beats resisting.</li>
+            <li>Finish with a session in the record and a next step written down.</li>
+          </ul>
+          <button class="btn btn-primary" data-open-auth>Start your first session</button>
+        </div>
+        <div class="split-visual">
+          <div class="shield-mock">
+            <p class="eyebrow">Shield on</p>
+            <div class="shield-timer">24:18</div>
+            <p class="shield-task">Chapter 4 - notes, not the whole degree.</p>
+            <div class="shield-bar"><span></span></div>
+            <div class="shield-actions"><span class="shield-btn">Pause</span><span class="shield-btn ghost">I need a break</span></div>
           </div>
-          <div class="form-grid two-columns">
-            <label>Reminder
-              <select id="taskReminder"><option value="0">At start time</option><option value="5" selected>5 minutes before</option><option value="10">10 minutes before</option><option value="30">30 minutes before</option></select>
-            </label>
-            <label>Belongs to
-              <select id="taskGoal"><option value="Daily life">Daily life</option><option value="Semester sprint">Semester sprint</option><option value="Build my portfolio">Build my portfolio</option><option value="Health & energy">Health & energy</option></select>
-            </label>
-          </div>
-          <label>Make it easier to start <textarea id="taskNotes" placeholder="First tiny step: open the notes and read page one…" maxlength="220"></textarea></label>
-          <div class="notification-note"><span>◌</span><span>We’ll nudge you at the right moment. When it’s time, tap <b>Start</b>; when you’re done, tap <b>Finish</b>.</span></div>
-          <div class="modal-actions">
-            <button type="button" class="text-button danger" id="deleteTaskButton" hidden>Delete task</button>
-            <span class="modal-spacer"></span>
-            <button type="button" class="secondary-button" data-close-modal="taskModal">Cancel</button>
-            <button type="submit" class="primary-button">Save my plan <span>→</span></button>
-          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="privacy">
+      <div class="section-head">
+        <p class="eyebrow"><span class="dot"></span> Privacy by default</p>
+        <h2>Your day is nobody else&rsquo;s content.</h2>
+        <p class="section-sub">No ads, no selling behaviour, no &ldquo;engagement&rdquo; tricks. The product is a calmer day, not your attention.</p>
+      </div>
+      <div class="privacy-grid">
+        <article class="privacy-card"><div class="feature-icon">&#128274;</div><h3>Separate space per account</h3><p>Your tasks, sessions, urges and notes live under your account key - never mixed into a shared pool, never visible to another user.</p></article>
+        <article class="privacy-card"><div class="feature-icon">&#9723;</div><h3>Local-first and honest</h3><p>This build stores your data on your device, per account. The included Supabase schema enables row-level security, so when sync ships every row is scoped to its owner.</p></article>
+        <article class="privacy-card"><div class="feature-icon">&#8681;</div><h3>Export and delete, any time</h3><p>Download a full JSON backup or a CSV of sessions. Delete your data in two clicks. No email to support, no retention maze.</p></article>
+        <article class="privacy-card"><div class="feature-icon">&#9993;</div><h3>Email only for sign-in</h3><p>Google sign-in or a six-digit code. No passwords to leak, no marketing list, no third-party trackers embedded in the app.</p></article>
+      </div>
+      <p class="fineprint">Honest note: this is a static GitHub Pages app. Without a backend it cannot email a code or sync between devices. The setup guide shows the free Supabase project that turns real email codes and Google sign-in on in about ten minutes; cross-device sync is the next build. Read the <a href="privacy.html">full privacy policy</a>.</p>
+    </section>
+
+    <section class="section" id="pricing">
+      <div class="section-head">
+        <p class="eyebrow"><span class="dot"></span> Pricing</p>
+        <h2>Less than a coffee. More than a to-do list.</h2>
+        <p class="section-sub">Start with the free plan forever. Upgrade when the limits start to pinch, not because a screen made you feel behind.</p>
+      </div>
+      <div class="pricing-grid">
+        <article class="price-card">
+          <h3>Free</h3>
+          <p class="price"><span>$0</span>/ forever</p>
+          <p class="price-note">The whole core loop, no card.</p>
+          <ul class="check-list compact">
+            <li>10 open tasks</li>
+            <li>4 focus sessions a day</li>
+            <li>7-day history</li>
+            <li>3 goals</li>
+            <li>25 &amp; 50-minute sessions</li>
+            <li>Fullscreen shield + streak</li>
+          </ul>
+          <button class="btn btn-ghost btn-block" data-open-auth>Start free</button>
+          <p class="price-foot">No card. No trial timer.</p>
+        </article>
+
+        <article class="price-card">
+          <h3>Plus</h3>
+          <p class="price"><span>$2</span>/ month</p>
+          <p class="price-note">$20 billed yearly - two months free.</p>
+          <ul class="check-list compact">
+            <li>Everything in Free</li>
+            <li>Unlimited tasks &amp; sessions</li>
+            <li>30-day history</li>
+            <li>10 goals</li>
+            <li>90-minute deep sessions</li>
+            <li>Ambient soundscapes</li>
+            <li>CSV export</li>
+          </ul>
+          <button class="btn btn-soft btn-block" data-checkout="plus">Choose Plus</button>
+          <p class="price-foot">Cancel any time.</p>
+        </article>
+
+        <article class="price-card is-pro">
+          <span class="pro-badge">Best value</span>
+          <h3>Pro</h3>
+          <p class="price"><span>$3</span>/ month</p>
+          <p class="price-note">$30 billed yearly.</p>
+          <ul class="check-list compact">
+            <li>Everything in Plus</li>
+            <li>1-year history</li>
+            <li>Smart step-split (AI) <span class="soon">soon</span></li>
+            <li>Calendar export <span class="soon">soon</span></li>
+            <li>Streak repair <span class="soon">soon</span></li>
+            <li>Custom themes <span class="soon">soon</span></li>
+          </ul>
+          <button class="btn btn-primary btn-block" data-checkout="pro">Choose Pro</button>
+          <p class="price-foot">For the deep-work season.</p>
+        </article>
+
+        <article class="price-card">
+          <h3>Premium</h3>
+          <p class="price"><span>$5</span>/ month</p>
+          <p class="price-note">$50 billed yearly.</p>
+          <ul class="check-list compact">
+            <li>Everything in Pro</li>
+            <li>Accountability rooms <span class="soon">soon</span></li>
+            <li>Weekly review email <span class="soon">soon</span></li>
+            <li>Priority support</li>
+            <li>Early access to new tools</li>
+          </ul>
+          <button class="btn btn-soft btn-block" data-checkout="premium">Choose Premium</button>
+          <p class="price-foot">For people who want company.</p>
+        </article>
+      </div>
+      <p class="pricing-foot">Prices in USD. Regional and student pricing is applied at checkout. Items marked <span class="soon">soon</span> ship in phases - the roadmap lives in FEATURES.md.</p>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="section-head">
+        <p class="eyebrow"><span class="dot"></span> Straight answers</p>
+        <h2>Questions people actually ask.</h2>
+      </div>
+      <div class="faq-list">
+        <details open><summary>Is the free plan really free?</summary><p>Yes, forever. It caps open tasks at 10, sessions at 4 a day, history at 7 days and goals at 3. No card, no trial countdown, no downgrade surprise.</p></details>
+        <details><summary>Do I need a credit card to start?</summary><p>No. Sign in with Google or an email code, and the free plan is live immediately. A card only appears when you choose a paid plan.</p></details>
+        <details><summary>How does sign-in work without a password?</summary><p>You enter a username and email, then a six-digit code is sent to that inbox. With Supabase connected, the code is emailed by Supabase. Google sign-in is one tap. There is no password to reuse or leak.</p></details>
+        <details><summary>Where does my data live?</summary><p>In this build, per-account on your device - isolated by a key that includes your account id. The included Supabase schema is ready for Postgres with row-level security, so when sync ships no other user can read your rows. You can export or delete everything at any time.</p></details>
+        <details><summary>What happens if I miss a day?</summary><p>Nothing punitive. The streak shows the truth, and a repair for Pro is on the roadmap so one bad day does not erase a good month. The point is returning, not perfection.</p></details>
+        <details><summary>Can I cancel or export my data?</summary><p>Cancel whenever - access lasts to the end of the paid period. Export a JSON backup at any time, a session CSV on Plus and above, and delete your data in two clicks.</p></details>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <h2>Tomorrow-you is already tired. Give them a smaller list.</h2>
+      <p>One thought, one first step, one protected block. Start tonight.</p>
+      <button class="btn btn-primary" data-open-auth>Start free</button>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand" href="#/welcome"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+    <p>Make tomorrow easier on yourself.</p>
+    <div class="footer-links">
+      <a href="#why">Why</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <button data-open-auth>Sign in</button>
+    </div>
+    <small>&copy; <span id="year">2025</span> FocusFlow. Built for the person who is trying.</small>
+  </footer>
+</div>
+
+<section class="auth-screen" id="authScreen" hidden>
+  <aside class="auth-aside">
+    <a class="brand brand-inverse" href="#/welcome"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+    <div class="auth-aside-copy">
+      <p class="eyebrow light"><span class="dot"></span> Private by design</p>
+      <h2>Your day, kept quietly. Picked up exactly where you left it.</h2>
+      <p class="auth-aside-sub">Tasks, sessions, urges and notes belong to your account only. No feed, no followers, no comparing.</p>
+      <ul class="auth-points">
+        <li><span>&#10003;</span> Separate data space for every account</li>
+        <li><span>&#10003;</span> Export a backup, or delete it all, in two clicks</li>
+        <li><span>&#10003;</span> Google sign-in or a six-digit email code</li>
+        <li><span>&#10003;</span> No ads, no trackers, no data sold</li>
+      </ul>
+    </div>
+    <p class="auth-mode" id="authModeNote">Checking sign-in configuration...</p>
+  </aside>
+
+  <div class="auth-panel">
+    <button class="auth-back" id="authBack">&larr; Back to site</button>
+    <div class="auth-card">
+      <div class="auth-step" id="authStep1">
+        <p class="eyebrow">Step 1 of 2</p>
+        <h2>Start with a name and an email.</h2>
+        <p class="muted">We send a six-digit code. There is no password to remember or reuse.</p>
+        <button class="btn btn-google btn-block" id="googleBtn" type="button">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Continue with Google
+        </button>
+        <div class="divider">or use email</div>
+        <form id="authForm1" novalidate>
+          <label class="field"><span>Username</span><input id="authUsername" name="username" maxlength="24" autocomplete="nickname" placeholder="What should we call you?" /></label>
+          <label class="field"><span>Email</span><input id="authEmail" name="email" type="email" autocomplete="email" placeholder="you@gmail.com" /></label>
+          <p class="field-error" id="authError1" role="alert"></p>
+          <button class="btn btn-primary btn-block" id="sendCodeBtn" type="submit">Email me a code</button>
         </form>
-      </section>
-    </div>
+        <p class="fineprint">Sign in is for your account only. We never post, never email marketing, and never share your history.</p>
+        <p class="auth-footnote">By continuing you agree to the <a href="privacy.html">Privacy policy</a> and <a href="terms.html">Terms</a>.</p>
+      </div>
 
-    <div class="modal-backdrop" id="goalModal" aria-hidden="true">
-      <section class="modal goal-modal" role="dialog" aria-modal="true" aria-labelledby="goalModalTitle">
-        <div class="modal-header"><div><p class="eyebrow">DIRECTION, NOT PRESSURE</p><h2 id="goalModalTitle">Add a goal</h2></div><button class="close-button" data-close-modal="goalModal" aria-label="Close">×</button></div>
-        <form id="goalForm">
-          <input type="hidden" id="goalId" />
-          <label>Goal title<input id="goalTitle" class="large-input" required maxlength="80" placeholder="e.g. Feel calm before finals" /></label>
-          <div class="form-grid two-columns"><label>Horizon<select id="goalType"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="short-term">Short-term</option><option value="long-term">Long-term</option></select></label><label>Target date<input id="goalDate" type="date" /></label></div>
-          <label>Why this matters<textarea id="goalWhy" maxlength="200" placeholder="A reason worth showing up for on the messy days."></textarea></label>
-          <div class="modal-actions"><span class="modal-spacer"></span><button type="button" class="secondary-button" data-close-modal="goalModal">Cancel</button><button type="submit" class="primary-button">Keep this in view <span>→</span></button></div>
+      <div class="auth-step" id="authStep2" hidden>
+        <p class="eyebrow">Step 2 of 2</p>
+        <h2>Check your inbox.</h2>
+        <p class="muted">Enter the six-digit code sent to <b id="authEmailLabel"></b>, or open the sign-in link in that email.</p>
+        <div class="demo-code" id="demoCodeBox" hidden>Preview code: <b id="demoCode"></b> - use it to continue.</div>
+        <form id="authForm2" novalidate>
+          <div class="otp-row">
+            <input class="otp-digit" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1" />
+            <input class="otp-digit" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 2" />
+            <input class="otp-digit" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 3" />
+            <input class="otp-digit" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 4" />
+            <input class="otp-digit" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 5" />
+            <input class="otp-digit" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 6" />
+          </div>
+          <p class="field-error" id="authError2" role="alert"></p>
+          <button class="btn btn-primary btn-block" id="verifyBtn" type="submit">Verify and enter</button>
         </form>
+        <div class="auth-links">
+          <button class="link-button" id="resendBtn" type="button">Resend code <span id="resendTimer"></span></button>
+          <button class="link-button" id="changeEmail" type="button">Change email</button>
+        </div>
+        <p class="auth-footnote" id="otpNote">Codes expire in 10 minutes and allow five tries. After that, request a fresh one.</p>
+        <p class="auth-footnote">By continuing you agree to the <a href="privacy.html">Privacy policy</a> and <a href="terms.html">Terms</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="app-shell" id="app" hidden>
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <a class="brand" href="#/today"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">&times;</button>
+    </div>
+    <button class="plan-button" id="upgradeBtn"><span>&#10022;</span> Upgrade your focus</button>
+    <nav class="main-nav" aria-label="App">
+      <p class="nav-label">Daily</p>
+      <a class="nav-link active" data-page="today" href="#/today"><span class="nav-icon">&#9673;</span> Today</a>
+      <a class="nav-link" data-page="focus" href="#/focus"><span class="nav-icon">&#9201;</span> Focus</a>
+      <p class="nav-label">Think</p>
+      <a class="nav-link" data-page="dump" href="#/dump"><span class="nav-icon">&#9998;</span> Brain dump</a>
+      <a class="nav-link" data-page="goals" href="#/goals"><span class="nav-icon">&#8593;</span> Goals</a>
+      <p class="nav-label">Look back</p>
+      <a class="nav-link" data-page="journal" href="#/journal"><span class="nav-icon">&#9776;</span> Journal</a>
+      <a class="nav-link" data-page="insights" href="#/insights"><span class="nav-icon">&#9636;</span> Insights</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="plan-card">
+        <p class="eyebrow">Your plan</p>
+        <b id="planCardName">Free</b>
+        <p id="planCardCopy">7-day history, 4 sessions a day.</p>
+        <a class="link-button small" href="#/settings">Manage plan</a>
+      </div>
+      <a class="nav-link" data-page="settings" href="#/settings"><span class="nav-icon">&#9881;</span> Settings</a>
+      <button class="profile-button" id="profileBtn">
+        <span class="avatar" id="avatar">F</span>
+        <span class="profile-copy"><b id="profileName">FocusFlow</b><small id="profilePlan">Free plan</small></span>
+        <span class="chevron">&rsaquo;</span>
+      </button>
+      <button class="link-button small" id="sidebarSignOut">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="app-topbar">
+      <button class="icon-button" id="menuBtn" aria-label="Open menu">&#9776;</button>
+      <div class="topbar-copy">
+        <p class="eyebrow" id="todayLabel">TODAY</p>
+        <h1 id="pageHeading">Your day</h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" id="topShieldBtn">Shield</button>
+        <button class="btn btn-primary btn-sm" id="topStartBtn">Start focus</button>
+      </div>
+    </header>
+
+    <div class="page-root">
+      <section class="page" data-page="today" id="page-today">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <p class="stat-label">Focused today</p>
+            <b id="statFocus">0m</b>
+            <small id="statFocusSub">of 2h goal</small>
+            <div class="stat-meter"><span id="statFocusMeter"></span></div>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Tasks moved</p>
+            <b id="statTasks">0</b>
+            <small id="statTasksSub">nothing planned yet</small>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Streak</p>
+            <b id="statStreak">0</b>
+            <small id="statStreakSub">one session starts it</small>
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <div class="card">
+            <div class="card-head">
+              <div><p class="eyebrow">Today</p><h2>What actually matters today</h2></div>
+              <span class="count-pill" id="todayCount">0 tasks</span>
+            </div>
+            <div class="next-task" id="nextTaskCard" hidden>
+              <span class="next-label">NEXT</span>
+              <b id="nextTaskTitle"></b>
+              <button class="btn" id="nextTaskStart" type="button">Start</button>
+            </div>
+            <ul class="task-list" id="todayList"></ul>
+            <div class="empty-state" id="todayEmpty">
+              <p class="empty-title">Nothing planned yet</p>
+              <p class="muted">Add one task you could finish in 25 minutes. Not the whole project - the first sentence of it.</p>
+            </div>
+            <form class="quick-add" id="taskForm">
+              <input id="taskInput" name="task" maxlength="120" autocomplete="off" placeholder="One task, small enough to start..." />
+              <select id="energyChip" aria-label="Energy type">
+                <option value="easy">Warm-up</option>
+                <option value="focus" selected>Focus</option>
+                <option value="deep">Deep work</option>
+              </select>
+              <button class="btn btn-primary btn-sm" type="submit">Add</button>
+            </form>
+          </div>
+
+          <div class="side-stack">
+            <div class="card">
+              <p class="eyebrow">Start</p>
+              <h3>One 25-minute session</h3>
+              <p class="muted">You do not have to finish. You only have to begin, and the shield will hold the rest.</p>
+              <button class="btn btn-primary btn-block" id="startFocusCard" type="button">Start focus</button>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>Done today</h3><span class="count-pill" id="doneCount">0</span></div>
+              <ul class="task-list" id="doneList"></ul>
+              <div class="empty-state" id="doneEmpty">
+                <p class="empty-title">No wins logged yet</p>
+                <p class="muted">Finishing one small thing is enough to make this list real.</p>
+              </div>
+            </div>
+            <div class="card" id="recapCard">
+              <p class="eyebrow">Yesterday</p>
+              <h3 id="recapTitle">Your first day starts now.</h3>
+              <p class="muted" id="recapCopy">Finish one session and tomorrow&rsquo;s recap appears here.</p>
+              <div class="recap-stats" id="recapStats" hidden></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="focus" id="page-focus" hidden>
+        <div class="focus-layout">
+          <div class="card timer-card">
+            <div class="timer-modes" role="group" aria-label="Session length">
+              <button class="mode-pill" data-minutes="25" type="button">25 min</button>
+              <button class="mode-pill" data-minutes="50" type="button">50 min</button>
+              <button class="mode-pill" data-minutes="90" type="button">90 min <span class="pro-tag">Plus</span></button>
+            </div>
+            <div class="timer-ring">
+              <svg viewBox="0 0 300 300" aria-hidden="true">
+                <circle class="ring-track" cx="150" cy="150" r="132"></circle>
+                <circle class="ring-progress" id="ringProgress" cx="150" cy="150" r="132"></circle>
+              </svg>
+              <div class="timer-center">
+                <div class="timer-time" id="timerDisplay">25:00</div>
+                <div class="timer-state" id="timerState">ready when you are</div>
+              </div>
+            </div>
+            <label class="field timer-task-field"><span>What are you focusing on?</span><select id="focusTaskSelect"></select></label>
+            <div class="timer-actions">
+              <button class="btn btn-primary" id="timerStart" type="button">Start focus</button>
+              <button class="btn btn-ghost" id="timerReset" type="button">Reset</button>
+              <button class="btn btn-ghost" id="shieldBtn" type="button">Shield</button>
+              <button class="btn btn-ghost" id="ambientBtn" type="button">Ambient sound</button>
+            </div>
+            <p class="timer-hint">Press space to start or pause. Shield hides everything but the clock.</p>
+          </div>
+
+          <div class="side-stack">
+            <div class="card">
+              <div class="card-head"><h3>Today&rsquo;s sessions</h3><span class="count-pill" id="sessionCount">0</span></div>
+              <ul class="session-list" id="sessionList"></ul>
+              <div class="empty-state" id="sessionEmpty">
+                <p class="empty-title">No sessions yet</p>
+                <p class="muted">The first one is the hardest. Twenty-five minutes, one task, phone out of reach.</p>
+              </div>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Recover</p>
+              <h3>Noticed an urge?</h3>
+              <p class="muted">Log it instead of obeying it. Naming the pull is the skill; leaving it alone is the side effect.</p>
+              <button class="btn btn-soft btn-block" id="urgeBtn" type="button">I noticed an urge</button>
+              <p class="muted small" id="urgeNote">0 urges noticed today</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="dump" id="page-dump" hidden>
+        <div class="dump-layout">
+          <div class="card">
+            <p class="eyebrow">Capture</p>
+            <h2>Everything on your mind</h2>
+            <p class="muted">Unfinished thoughts take up focus. Park them here in one line - you can decide what they deserve later.</p>
+            <form id="dumpForm">
+              <label class="field"><span>What is pulling at you?</span><textarea id="dumpInput" maxlength="400" placeholder="Email the landlord, look up that citation, buy oat milk..."></textarea></label>
+              <div class="form-foot"><span class="count-pill" id="dumpCount">0</span><button class="btn btn-primary btn-sm" type="submit">Park it</button></div>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><p class="eyebrow">Inbox</p><h3>Waiting, without the noise</h3></div><span class="count-pill" id="dumpTotal">0</span></div>
+            <ul class="dump-list" id="dumpList"></ul>
+            <div class="empty-state" id="dumpEmpty">
+              <p class="empty-title">The inbox is empty</p>
+              <p class="muted">Nothing is nagging you right now. Keep it that way for the next 25 minutes.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="goals" id="page-goals" hidden>
+        <div class="goals-layout">
+          <div class="card">
+            <p class="eyebrow">Direction</p>
+            <h2>What is this season for?</h2>
+            <p class="muted">A goal is a direction, not a debt. Keep it short, keep the why honest, and let today hold the smallest next step.</p>
+            <form id="goalForm">
+              <label class="field"><span>Goal</span><input id="goalTitle" maxlength="100" autocomplete="off" placeholder="Finish the statistics coursework" /></label>
+              <label class="field"><span>Horizon</span>
+                <select id="goalHorizon">
+                  <option value="daily">Today</option>
+                  <option value="weekly" selected>This week</option>
+                  <option value="short-term">This month</option>
+                  <option value="long-term">This season</option>
+                </select>
+              </label>
+              <label class="field"><span>Why it matters</span><input id="goalWhy" maxlength="140" autocomplete="off" placeholder="So the final week is not a panic" /></label>
+              <button class="btn btn-primary" type="submit">Save goal</button>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><p class="eyebrow">The ladder</p><h3>Goals in view</h3></div><span class="count-pill" id="goalCount">0</span></div>
+            <ul class="goal-list" id="goalList"></ul>
+            <div class="empty-state" id="goalEmpty">
+              <p class="empty-title">No goals yet</p>
+              <p class="muted">Start with one thing that would make this week feel different. The why can be one sentence.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-page="journal" id="page-journal" hidden>
+        <div class="journal-head">
+          <div><p class="eyebrow">History</p><h2>Your record, day by day</h2></div>
+          <span class="count-pill" id="journalRange">Last 7 days</span>
+        </div>
+        <div class="journal-list" id="journalList"></div>
+        <div class="empty-state" id="journalEmpty">
+          <p class="empty-title">The record starts today</p>
+          <p class="muted">Finish a session or a task and this page fills in: what moved, how long you stayed, and one line for future-you.</p>
+        </div>
+      </section>
+
+      <section class="page" data-page="insights" id="page-insights" hidden>
+        <div class="insights-head">
+          <div><p class="eyebrow">Evidence</p><h2>Patterns, not perfection</h2></div>
+          <div class="range-toggle" role="group" aria-label="Date range">
+            <button class="mode-pill is-active" data-range="7" type="button">7 days</button>
+            <button class="mode-pill" data-range="30" type="button">30 days</button>
+          </div>
+        </div>
+        <div class="stat-grid four">
+          <div class="stat-card"><p class="stat-label">Avg per active day</p><b id="insAvg">0m</b><small>focus time</small></div>
+          <div class="stat-card"><p class="stat-label">Sessions</p><b id="insSessions">0</b><small>completed</small></div>
+          <div class="stat-card"><p class="stat-label">Urges noticed</p><b id="insUrges">0</b><small>caught, not obeyed</small></div>
+          <div class="stat-card"><p class="stat-label">Completion rate</p><b id="insRate">0%</b><small>of tasks created</small></div>
+        </div>
+        <div class="card chart-card">
+          <div class="card-head">
+            <div><h3 id="chartTitle">Last 7 days</h3><p class="muted small">Focus minutes per day</p></div>
+            <button class="btn btn-ghost btn-sm" id="exportBtn" type="button">Export CSV</button>
+          </div>
+          <div class="bar-chart" id="barChart"></div>
+          <p class="chart-caption" id="chartCaption"></p>
+        </div>
+        <div class="card reflection-card">
+          <p class="eyebrow">What the data is saying</p>
+          <h3>Three honest observations</h3>
+          <ul class="insight-notes" id="insightNotes"></ul>
+        </div>
+      </section>
+
+      <section class="page" data-page="settings" id="page-settings" hidden>
+        <div class="settings-layout">
+          <div class="side-stack">
+            <div class="card">
+              <p class="eyebrow">Appearance</p>
+              <h3>Make it yours</h3>
+              <div class="setting-row">
+                <div><b>Theme</b><small>Light, dark, or follow your system</small></div>
+                <select id="themeSelect"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+              </div>
+              <div class="setting-row">
+                <div><b>Daily focus goal</b><small>Minutes that feel honest, not heroic</small></div>
+                <select id="goalSelect"><option value="60">1 hour</option><option value="120">2 hours</option><option value="180">3 hours</option><option value="240">4 hours</option></select>
+              </div>
+              <div class="setting-row">
+                <div><b>Ambient sound</b><small>Default preference for brown-noise sessions</small></div>
+                <label class="switch"><input type="checkbox" id="soundToggle" aria-label="Ambient sound" /><span></span></label>
+              </div>
+              <div class="setting-row">
+                <div><b>Session notifications</b><small>One calm alert when a session ends</small></div>
+                <label class="switch"><input type="checkbox" id="notifyToggle" aria-label="Session notifications" /><span></span></label>
+              </div>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Plan</p>
+              <h3 id="settingsPlanCopy">Free - 7-day history</h3>
+              <p class="muted">Upgrade for unlimited tasks, longer history, 90-minute sessions and export. Cancel any time.</p>
+              <button class="btn btn-soft" id="settingsUpgrade" type="button">Go Pro</button>
+            </div>
+          </div>
+          <div class="side-stack">
+            <div class="card">
+              <p class="eyebrow">Account</p>
+              <h3>Your account</h3>
+              <div class="account-row">
+                <span class="avatar" id="settingsAvatar">F</span>
+                <div><b id="settingsName">FocusFlow</b><small id="settingsEmail">you@example.com</small></div>
+                <button class="btn btn-ghost btn-sm" id="settingsSignOut" type="button">Sign out</button>
+              </div>
+              <p class="muted small">Only you can open this record. Tasks, sessions, urges and notes are keyed to your account, never pooled with another user.</p>
+            </div>
+            <div class="card">
+              <p class="eyebrow">Data</p>
+              <h3>Your data, your call</h3>
+              <p class="muted">Take a full backup before deleting, restore it on another device, or export sessions as a spreadsheet.</p>
+              <div class="danger-zone">
+                <button class="btn btn-ghost btn-sm" id="exportJson" type="button">Export backup</button>
+                <button class="btn btn-ghost btn-sm" id="importBtn" type="button">Import backup</button>
+                <button class="btn btn-ghost btn-sm" id="exportCsv" type="button">Export CSV</button>
+                <button class="btn btn-danger btn-sm" id="deleteData" type="button">Delete data</button>
+                <input type="file" id="importFile" accept="application/json,.json" hidden />
+              </div>
+              <p class="fineprint">Deleting removes this account&rsquo;s local record on this device immediately and cannot be undone.</p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
+  </main>
+</div>
 
-    <div class="modal-backdrop" id="authModal" aria-hidden="true">
-      <section class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-        <button class="close-button floating-close" data-close-modal="authModal" aria-label="Close">×</button>
-        <div class="auth-symbol">f</div><p class="eyebrow">WELCOME TO YOUR CALMER TOMORROW</p><h2 id="authTitle">Keep your promises in one place.</h2>
-        <p class="auth-subtitle">Sign in to sync your plans across devices. This demo keeps your data safely in this browser.</p>
-        <form id="authForm"><label>Email<input id="authEmail" type="email" required placeholder="you@example.com" /></label><label>First name<input id="authName" required maxlength="30" placeholder="Aarav" /></label><button class="primary-button full-button" type="submit">Continue with email <span>→</span></button></form>
-        <p class="auth-footnote">No guilt trips. Just good reminders.</p>
-      </section>
+<template id="tplTask">
+  <li class="task-item">
+    <button class="task-check" data-act="done" type="button" aria-label="Mark complete"></button>
+    <div class="task-body"><span class="task-title"></span><span class="task-meta"></span></div>
+    <div class="task-actions">
+      <button class="chip-button" data-act="focus" type="button">Focus</button>
+      <button class="icon-only" data-act="delete" type="button" aria-label="Delete task">&times;</button>
     </div>
+  </li>
+</template>
 
-    <div class="toast-stack" id="toastStack" aria-live="assertive"></div>
-    <script src="app.js"></script>
-  </body>
+<template id="tplDone">
+  <li class="task-item is-done">
+    <button class="task-check is-checked" data-act="restore" type="button" aria-label="Restore task">&#10003;</button>
+    <div class="task-body"><span class="task-title"></span><span class="task-meta"></span></div>
+  </li>
+</template>
+
+<template id="tplDump">
+  <li class="dump-item">
+    <span class="dump-text"></span>
+    <div class="dump-actions">
+      <button class="chip-button" data-act="promote" type="button">Make a task</button>
+      <button class="icon-only" data-act="remove" type="button" aria-label="Remove from inbox">&times;</button>
+    </div>
+  </li>
+</template>
+
+<template id="tplGoal">
+  <li class="goal-item">
+    <div class="goal-head"><span class="goal-title"></span><span class="goal-tag"></span></div>
+    <p class="goal-why"></p>
+    <div class="goal-actions">
+      <button class="chip-button" data-act="toggle" type="button">Mark reached</button>
+      <button class="icon-only" data-act="remove" type="button" aria-label="Remove goal">&times;</button>
+    </div>
+  </li>
+</template>
+
+<template id="tplSession">
+  <li class="session-item"><b class="session-min"></b><span class="session-what"></span><small class="session-time"></small></li>
+</template>
+
+<template id="tplBar">
+  <div class="bar-col"><div class="bar-track"><div class="bar-fill"></div></div><span class="bar-label"></span></div>
+</template>
+
+<template id="tplJournal">
+  <article class="card journal-card">
+    <div class="journal-head">
+      <div><p class="eyebrow journal-day"></p><h3 class="journal-title"></h3></div>
+      <span class="count-pill journal-focus"></span>
+    </div>
+    <div class="journal-stats"></div>
+    <label class="field journal-note"><span>One line for future-you</span><textarea maxlength="280" placeholder="What actually moved today?"></textarea></label>
+  </article>
+</template>
+
+<div class="modal-backdrop" id="planModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="planModalTitle">
+    <button class="close-button" data-close-modal type="button" aria-label="Close">&times;</button>
+    <p class="eyebrow">Plans</p>
+    <h2 id="planModalTitle">Choose your depth</h2>
+    <p class="muted">Free keeps the core loop forever. Plus, Pro and Premium add room for longer history, deeper sessions and accountability.</p>
+    <div class="range-toggle billing-toggle" role="group" aria-label="Billing period">
+      <button class="mode-pill is-active" data-billing="monthly" type="button">Monthly</button>
+      <button class="mode-pill" data-billing="yearly" type="button">Yearly - save 17%</button>
+    </div>
+    <div class="mini-plans" id="miniPlans"></div>
+    <p class="muted small" id="checkoutNote">Prices in USD. Cancel any time.</p>
+    <div class="modal-actions"><button class="btn btn-ghost btn-sm" data-close-modal type="button">Not now</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="confirmModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <p class="eyebrow">Confirm</p>
+    <h2 id="confirmTitle">Are you sure?</h2>
+    <p class="muted" id="confirmCopy"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" data-close-modal type="button">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="confirmBtn" type="button">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<noscript><p style="padding:24px;text-align:center">FocusFlow needs JavaScript for the timer, tasks and history. Please enable it and reload.</p></noscript>
+
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/store.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/app.js"></script>
+</body>
 </html>

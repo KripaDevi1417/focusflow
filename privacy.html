@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy policy - FocusFlow</title>
+  <meta name="description" content="How FocusFlow handles your account, your daily record and your email. Plain language, no trackers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="legal-page">
+    <div class="legal-top">
+      <a class="brand" href="index.html"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+      <a class="legal-back" href="index.html">&larr; Back to FocusFlow</a>
+    </div>
+
+    <p class="eyebrow">Privacy</p>
+    <h1>Your record belongs to you.</h1>
+    <p class="lede">FocusFlow is a small, independent tool. This page explains, in plain language, what is stored, where it lives, and how to remove it.</p>
+    <p class="updated">Effective 26 November 2026</p>
+
+    <div class="callout">
+      <p><b>The short version.</b> Your tasks, sessions, notes and goals are stored in your browser under your own account key. When you sign in with email or Google, Supabase handles authentication. We do not sell data, run ads or use third-party analytics.</p>
+    </div>
+
+    <h2>1. Who is responsible</h2>
+    <p>FocusFlow is operated by the person or team publishing this site at <a href="https://kripadevi1417.github.io/focusflow/">kripadevi1417.github.io/focusflow</a>. For any privacy request, email <a data-support-email href="mailto:hello@focusflow.app">hello@focusflow.app</a>.</p>
+
+    <h2>2. What is stored</h2>
+    <ul>
+      <li><b>Account details:</b> the username and email address you enter, or the name and email Google shares when you choose Google sign-in.</li>
+      <li><b>Your app record:</b> tasks, focus sessions, brain-dump items, goals, one-line journal notes, urge counts and settings. In this build these live in your browser&rsquo;s localStorage under a key that includes your account id.</li>
+      <li><b>Authentication session:</b> a token that keeps you signed in, stored by the Supabase client. In preview mode, a temporary code and session are kept in browser storage instead.</li>
+    </ul>
+    <p>We do not ask for your password, contacts, calendar, Gmail contents or precise location. Google sign-in requests only basic profile and email access.</p>
+
+    <h2>3. Where it lives</h2>
+    <p><b>Preview mode (no backend configured):</b> everything stays in this browser. The six-digit code appears on screen instead of being emailed. Nothing is sent to a FocusFlow server.</p>
+    <p><b>Connected mode (Supabase configured):</b> Supabase stores your authentication record and profile row. The database schema includes row-level security, so a query can only return rows belonging to the signed-in user. App content still lives in this browser today; cross-device sync is a later phase and this policy will be updated before it ships.</p>
+
+    <h2>4. Email and Google</h2>
+    <p>Sign-in codes are delivered by Supabase and its email provider, which process your email address to deliver the message. Google sign-in is handled by Google under its own privacy policy. Typography is loaded from Google Fonts, which receives your IP address when the page loads.</p>
+
+    <h2>5. Cookies and tracking</h2>
+    <p>FocusFlow sets no advertising cookies and includes no analytics, pixels or session replay. LocalStorage is used for the app record and sign-in session. Your browser may keep cached files; clearing site data removes them.</p>
+
+    <h2>6. How long we keep it</h2>
+    <p>The local record stays until you delete it in <b>Settings &rarr; Delete data</b> or clear your browser storage. Authentication records are kept while your account exists. To delete the account itself, email us from the address you signed up with and we will remove it.</p>
+
+    <h2>7. Your choices</h2>
+    <ul>
+      <li><b>Export</b> a full JSON backup from Settings at any time.</li>
+      <li><b>Delete</b> the local record from Settings in two clicks.</li>
+      <li><b>Correct</b> your username or email by contacting us; app content is editable in the app.</li>
+      <li><b>Object or ask</b> a question by email. We answer within a reasonable period.</li>
+    </ul>
+
+    <h2>8. Security</h2>
+    <p>The site is served over HTTPS. Authentication uses one-time codes or Google OAuth, so there is no FocusFlow password to leak. Database access is protected by row-level security. No system is perfectly secure; keep your email account protected and export a backup before deleting.</p>
+
+    <h2>9. Children</h2>
+    <p>FocusFlow is not directed at children under 13, or under the minimum age required in your country. If you believe a child created an account, contact us and we will remove it.</p>
+
+    <h2>10. Changes</h2>
+    <p>If this policy changes materially, the effective date above will change and, where we can, we will note it in the app. Continued use after a change means you accept the updated policy.</p>
+
+    <h2>11. Contact</h2>
+    <p>Questions, requests or concerns: <a data-support-email href="mailto:hello@focusflow.app">hello@focusflow.app</a>.</p>
+
+    <p class="updated"><a href="terms.html">Terms of use</a> &middot; <a href="index.html">FocusFlow home</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand" href="index.html"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+    <p>Make tomorrow easier on yourself.</p>
+    <div class="footer-links">
+      <a href="index.html#pricing">Pricing</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+    <small>&copy; <span id="year">2025</span> FocusFlow.</small>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script>
+    (function () {
+      var cfg = window.FF_CONFIG || {};
+      var email = cfg.supportEmail || "hello@focusflow.app";
+      document.querySelectorAll("[data-support-email]").forEach(function (node) {
+        node.textContent = email;
+        node.setAttribute("href", "mailto:" + email);
+      });
+      var year = document.getElementById("year");
+      if (year) year.textContent = String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>

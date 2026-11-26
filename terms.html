@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terms of use - FocusFlow</title>
+  <meta name="description" content="The plain-language terms for using FocusFlow: accounts, plans, acceptable use and the limits of a focus tool." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="legal-page">
+    <div class="legal-top">
+      <a class="brand" href="index.html"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+      <a class="legal-back" href="index.html">&larr; Back to FocusFlow</a>
+    </div>
+
+    <p class="eyebrow">Terms</p>
+    <h1>Simple terms, honestly put.</h1>
+    <p class="lede">These terms cover your use of FocusFlow. By creating an account or using the site, you agree to them.</p>
+    <p class="updated">Effective 26 November 2026</p>
+
+    <div class="callout">
+      <p><b>In one breath.</b> FocusFlow is a focus and task tool, not medical care. Keep your account accurate, use it lawfully, and understand that paid features depend on the checkout connected to this site.</p>
+    </div>
+
+    <h2>1. Using FocusFlow</h2>
+    <p>FocusFlow helps you capture tasks, run focus sessions and review your days. It is a productivity tool. It is not therapy, medical advice, crisis support or a guarantee of any outcome. If you are struggling, contact a qualified professional or local emergency service.</p>
+
+    <h2>2. Accounts</h2>
+    <p>You sign in with an email code or Google. Provide an email you control and a username that is not misleading or unlawful. You are responsible for activity under your account and for keeping access to your email secure. One person per account; do not share credentials.</p>
+
+    <h2>3. Plans and payment</h2>
+    <ul>
+      <li>Free, Plus, Pro and Premium plans are described on the <a href="index.html#pricing">pricing section</a>. Limits are enforced in the app and may change with notice.</li>
+      <li>Paid checkout is handled by Stripe or Razorpay. Their terms and privacy policies apply to payment details; FocusFlow does not store your card number.</li>
+      <li>Subscriptions renew automatically until cancelled. Cancel through the billing portal or by contacting us; access continues to the end of the paid period.</li>
+      <li>If a checkout link is not connected, selecting a plan may open a clearly labelled <b>preview unlock</b>. That is not a charge and creates no paid entitlement.</li>
+      <li>Prices are in USD unless shown otherwise, exclude taxes where applicable, and may change. We will give reasonable notice before a change affects your renewal.</li>
+      <li>Statutory refund rights are not affected. Outside those rights, refunds are considered case by case.</li>
+    </ul>
+
+    <h2>4. Acceptable use</h2>
+    <p>Do not break the law, attempt to access another person&rsquo;s account or data, probe or bypass security, overload the service, scrape it at scale, or use it to harass anyone. Do not upload malware or content you have no right to use.</p>
+
+    <h2>5. Your content</h2>
+    <p>The tasks, notes and goals you write are yours. You give us only the limited permission needed to store and display them back to you. In this build that storage is your browser; the included database schema is ready for sync, and these terms will be updated before sync ships.</p>
+
+    <h2>6. Availability and changes</h2>
+    <p>We aim to keep FocusFlow available, but the service is provided as-is and may change, pause or end. Features marked <span class="soon">soon</span> are plans, not promises of a date. Keep your own exports of anything important.</p>
+
+    <h2>7. Third-party services</h2>
+    <p>FocusFlow relies on services such as GitHub Pages, Supabase, Google, and a payment provider. Their availability and policies are outside our control. Links to other sites are provided for convenience, not endorsement.</p>
+
+    <h2>8. Disclaimers and liability</h2>
+    <p>To the extent permitted by law, FocusFlow is provided without warranties of fitness for a particular purpose or uninterrupted operation. We are not liable for indirect or consequential loss, or for lost data where you did not keep a backup. Nothing here limits rights that cannot legally be limited.</p>
+
+    <h2>9. Ending your use</h2>
+    <p>You may stop using FocusFlow at any time and delete your local data in Settings. We may suspend or close an account that seriously breaches these terms or creates risk for others. Where possible, we will explain why.</p>
+
+    <h2>10. Changes to these terms</h2>
+    <p>We may update these terms as the product changes. The effective date above will change, and material updates will be noted in the app where we can. Continuing to use FocusFlow means accepting the updated terms.</p>
+
+    <h2>11. Contact</h2>
+    <p>Questions about these terms: <a data-support-email href="mailto:hello@focusflow.app">hello@focusflow.app</a>.</p>
+
+    <p class="updated"><a href="privacy.html">Privacy policy</a> &middot; <a href="index.html">FocusFlow home</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand" href="index.html"><span class="brand-mark">F</span><span class="brand-word">FocusFlow</span></a>
+    <p>Make tomorrow easier on yourself.</p>
+    <div class="footer-links">
+      <a href="index.html#pricing">Pricing</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+    <small>&copy; <span id="year">2025</span> FocusFlow.</small>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script>
+    (function () {
+      var cfg = window.FF_CONFIG || {};
+      var email = cfg.supportEmail || "hello@focusflow.app";
+      document.querySelectorAll("[data-support-email]").forEach(function (node) {
+        node.textContent = email;
+        node.setAttribute("href", "mailto:" + email);
+      });
+      var year = document.getElementById("year");
+      if (year) year.textContent = String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>

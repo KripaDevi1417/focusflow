@@ -1,0 +1,9 @@
+# Local scratch / OS noise
+.check_html.py
+.write-probe.txt
+.pycheck/
+.ptc-repl-*
+.ff-deploy/
+.DS_Store
+Thumbs.db
+desktop.ini
