@@ -11,7 +11,7 @@ window.FFAccess = (function () {
     "theme.midnight":    { min: 0, label: "Midnight" },
     "theme.funky":       { min: 1, label: "Funky" },
     "theme.neon":        { min: 2, label: "Neon" },
-    "ambient.basic":     { min: 0, label: "Rain" },
+    "ambient.basic":     { min: 0, label: "Brown noise" },
     "ambient.studio":    { min: 1, label: "Sound studio" },
     "ambient.generative":{ min: 2, label: "Generative music" },
     "ritual.daily":      { min: 1, label: "Daily ritual" },

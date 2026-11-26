@@ -13,7 +13,8 @@ Live (GitHub Pages): <https://kripadevi1417.github.io/focusflow/>
 - **Landing page** with positioning, pricing, privacy and FAQ.
 - **Two-step sign-in** - Google OAuth, a six-digit email code, or a one-click email link. No passwords.
 - **App shell** with Today, Focus, Brain dump, Goals, Journal, Insights and Settings.
-- **Focus timer** - 25 / 50 / 90 minute sessions (limits by plan), SVG progress ring, tab-title countdown, fullscreen shield, brown-noise soundscape, spacebar start/pause.
+- **Focus timer** - 25 / 50 / 90 minute sessions (limits by plan), SVG progress ring, tab-title countdown, fullscreen shield, spacebar start/pause.
+- **Focus Studio** - eight synthesized soundscapes, a real mixer, presets and a generative chord bed. Brown noise is free; the full studio opens on Plus; generative music is Pro.
 - **Daily record** - minutes, sessions, tasks done and a one-line note per day; yesterday recap and streak.
 - **Brain dump** - park a thought, promote it into a task later.
 - **Urge log** - name the impulse instead of obeying it.
@@ -39,6 +40,7 @@ Vanilla HTML, CSS and JavaScript. No build step, no framework, no npm install. C
 | `js/access.js` | Central feature entitlements and theme locks |
 | `js/auth.js` | Google OAuth, email OTP, session restore, preview fallback |
 | `js/store.js` | Per-account state, history, stats, export/import |
+| `js/sound.js` | Synthesized soundscapes, mixer graph, generative bed |
 | `js/timer.js` | Timestamp-based focus timer |
 | `js/app.js` | Routing, rendering, theme studio, gating, modals, wiring |
 | `supabase/schema.sql` | Tables, indexes, RLS policies, plan guard |
@@ -67,8 +69,8 @@ This is deliberate. A static page cannot send email or take payments by itself. 
 | Plan | Price | Highlights |
 | --- | --- | --- |
 | Free | $0 | 10 open tasks, 4 sessions/day, 7-day history, 3 goals |
-| Plus | $2/mo ($20/yr) | Unlimited tasks and sessions, 30-day history, 10 goals, 90-min sessions, ambient sound, CSV export |
-| Pro | $3/mo ($30/yr) | Everything in Plus, 1-year history, Neon theme, advanced insights, recurring tasks, templates, calendar export, command palette |
+| Plus | $2/mo ($20/yr) | Unlimited tasks and sessions, 30-day history, 10 goals, 90-min sessions, all eight sounds + presets + mixer, CSV export |
+| Pro | $3/mo ($30/yr) | Everything in Plus, 1-year history, Neon theme, generative focus music, advanced insights, recurring tasks, templates, calendar export, command palette |
 | Premium | $5/mo ($50/yr) | Everything in Pro, 10-year history, Smart Plan, sync, focus rooms, adaptive soundscapes, early access |
 
 See [FEATURES.md](FEATURES.md) for exactly what ships now and what is phased, and for the market research behind the positioning.
@@ -83,9 +85,9 @@ GitHub Pages serves the repository root. Push these files to `main`, then **Sett
 
 ## Status
 
-- Working now: landing, real Google/email auth, app, timer, history, goals, dump, insights, settings, plan gating, four-theme studio, export/import, legal pages.
-- Needs your keys: email sign-in, Google OAuth, live checkout. Six-digit codes also need custom SMTP; the default Supabase email sends a link.
+- Working now: landing, real Google/email auth, app, timer, history, goals, dump, insights, settings, plan gating, four-theme studio, Focus Studio sounds, export/import, legal pages.
+- Needs your keys: live checkout. Email sign-in and Google OAuth are connected; six-digit codes use the configured SMTP.
 - Not built yet: cross-device sync. The Postgres schema and RLS policies are included and ready; the client is local-first today.
-- Roadmap: Focus Studio sounds, daily ritual, recurring tasks, calendar export, Smart Plan, sync, focus rooms, payments, native app blockers.
+- Roadmap: daily ritual, recurring tasks, calendar export, Smart Plan, sync, focus rooms, payments, native app blockers.
 
 Built for the person who is trying.

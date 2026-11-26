@@ -6,6 +6,7 @@
    ============================================================ */
 window.FFStore = (function () {
   var PREFIX = "ff.data.v1.";
+  var SOUND_KEYS = ["rain", "ocean", "brown", "green", "fire", "night", "wind", "cafe"];
   var state = null;
   var key = "";
   var user = null;
@@ -40,7 +41,10 @@ window.FFStore = (function () {
       sessions: [],
       urges: [],
       days: {},
-      settings: { theme: "system", dailyGoal: 120, sound: false, notify: false }
+      settings: {
+        theme: "system", dailyGoal: 120, sound: false, notify: false,
+        soundMix: { brown: 0.55 }, soundPreset: "custom", masterVolume: 0.7, generative: false
+      }
     };
   }
 
@@ -71,7 +75,7 @@ window.FFStore = (function () {
       if (value[k] === undefined) value[k] = base[k];
     });
     var settings = {};
-    ["theme", "dailyGoal", "sound", "notify"].forEach(function (k) {
+    ["theme", "dailyGoal", "sound", "notify", "soundMix", "soundPreset", "masterVolume", "generative"].forEach(function (k) {
       if (value.settings && value.settings[k] !== undefined) settings[k] = value.settings[k];
     });
     value.settings = Object.assign({}, base.settings, settings);
@@ -80,6 +84,17 @@ window.FFStore = (function () {
     value.settings.dailyGoal = isFinite(goal) && goal > 0 && goal <= 1440 ? goal : 120;
     value.settings.sound = !!value.settings.sound;
     value.settings.notify = !!value.settings.notify;
+    var rawMix = value.settings.soundMix && typeof value.settings.soundMix === "object" ? value.settings.soundMix : {};
+    var mix = {};
+    SOUND_KEYS.forEach(function (id) {
+      var level = Number(rawMix[id]);
+      mix[id] = isFinite(level) ? Math.max(0, Math.min(1, level)) : 0;
+    });
+    value.settings.soundMix = mix;
+    var masterVolume = Number(value.settings.masterVolume);
+    value.settings.masterVolume = isFinite(masterVolume) ? Math.max(0, Math.min(1, masterVolume)) : 0.7;
+    value.settings.generative = !!value.settings.generative;
+    if (typeof value.settings.soundPreset !== "string") value.settings.soundPreset = "custom";
     ["tasks", "dumps", "goals", "sessions", "urges"].forEach(function (k) {
       if (!Array.isArray(value[k])) value[k] = [];
       value[k] = value[k].filter(function (item) { return item && typeof item === "object"; });
@@ -255,6 +270,20 @@ window.FFStore = (function () {
     commit();
   }
 
+  function setSound(mix, preset, master, generative) {
+    var clean = {};
+    SOUND_KEYS.forEach(function (id) {
+      var level = Number(mix && mix[id]);
+      clean[id] = isFinite(level) ? Math.max(0, Math.min(1, level)) : 0;
+    });
+    state.settings.soundMix = clean;
+    if (typeof preset === "string") state.settings.soundPreset = preset;
+    var volume = Number(master);
+    if (isFinite(volume)) state.settings.masterVolume = Math.max(0, Math.min(1, volume));
+    if (typeof generative === "boolean") state.settings.generative = generative;
+    commit();
+  }
+
   function setPlan(id) {
     if (!window.FF_PLANS[id]) return;
     state.plan = id;
@@ -399,6 +428,7 @@ window.FFStore = (function () {
     addUrge: addUrge,
     setNote: setNote,
     setSetting: setSetting,
+    setSound: setSound,
     setPlan: setPlan,
     plan: plan,
     focusToday: focusToday,

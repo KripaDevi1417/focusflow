@@ -14,6 +14,13 @@
   var resendTimerId = null;
   var confirmCallback = null;
   var ambient = null;
+  var STUDIO_PRESETS = [
+    { id: "rain", label: "Rain", mix: { rain: 0.55, brown: 0.20 } },
+    { id: "deep", label: "Deep work", mix: { brown: 0.60, green: 0.20 } },
+    { id: "cafe", label: "Café", mix: { cafe: 0.55, brown: 0.18 } },
+    { id: "night", label: "Night", mix: { night: 0.55, brown: 0.18 } },
+    { id: "ocean", label: "Ocean", mix: { ocean: 0.55, wind: 0.18 } }
+  ];
   var shieldOn = false;
   var shieldTimer = null;
 
@@ -609,6 +616,7 @@
       pill.classList.toggle("is-active", Number(pill.dataset.minutes) === minutes);
     });
     if (timer) updateTimerDisplay(timer.remaining(), timer.total());
+    syncAmbientButton();
   }
 
   function updateTimerDisplay(remaining, total) {
@@ -646,6 +654,7 @@
       new Notification("Session complete", { body: "That is one rep. Log it and move on with your day." });
     }
     toast("Session logged. That counts.");
+    if (ambient) stopAmbient();
     if (shieldOn) exitShield();
     timer.reset();
     renderFocus();
@@ -677,46 +686,6 @@
     if (exit) exit.remove();
     if (document.fullscreenElement && document.exitFullscreen) {
       document.exitFullscreen().catch(function () {});
-    }
-  }
-
-  function toggleAmbient() {
-    var store = window.FFStore;
-    if (!store.plan().sound) {
-      openPlanModal("Ambient soundscapes are part of Plus.");
-      return;
-    }
-    var button = $("#ambientBtn");
-    if (ambient) {
-      ambient.stop();
-      ambient = null;
-      button.textContent = "Ambient sound";
-      toast("Sound off.");
-      return;
-    }
-    try {
-      var Ctx = window.AudioContext || window.webkitAudioContext;
-      var ctx = new Ctx();
-      var buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
-      var data = buffer.getChannelData(0);
-      var last = 0;
-      for (var i = 0; i < data.length; i++) {
-        var white = Math.random() * 2 - 1;
-        last = (last + 0.02 * white) / 1.02;
-        data[i] = last * 3.2;
-      }
-      var source = ctx.createBufferSource();
-      source.buffer = buffer;
-      source.loop = true;
-      var gain = ctx.createGain();
-      gain.gain.value = 0.18;
-      source.connect(gain);
-      gain.connect(ctx.destination);
-      source.start();
-      ambient = { ctx: ctx, source: source, gain: gain, stop: function () { try { source.stop(); ctx.close(); } catch (e) {} } };
-      button.textContent = "Stop sound";
-    } catch (err) {
-      toast("Audio is blocked in this browser - try Chrome or Edge.");
     }
   }
 
@@ -906,6 +875,277 @@
     toast(THEMES[id].name + " is on. Same focus, different room.");
   }
 
+  /* ---------------- focus studio ---------------- */
+  function studioLevel() {
+    return window.FFAccess ? window.FFAccess.level() : 0;
+  }
+
+  function soundAllowed(id) {
+    var meta = window.FFSound && window.FFSound.SOUNDS[id];
+    if (!meta) return false;
+    return studioLevel() >= (meta.plan || 0);
+  }
+
+  function filterMix(mix) {
+    var clean = {};
+    if (!window.FFSound) return clean;
+    Object.keys(window.FFSound.SOUNDS).forEach(function (id) {
+      var level = Number(mix && mix[id]);
+      clean[id] = soundAllowed(id) && isFinite(level) ? Math.max(0, Math.min(1, level)) : 0;
+    });
+    return clean;
+  }
+
+  function hasMix(mix) {
+    return Object.keys(mix || {}).some(function (id) { return mix[id] > 0.001; });
+  }
+
+  function defaultMix() {
+    if (studioLevel() >= 2) return { brown: 0.35, rain: 0.30, green: 0.12 };
+    if (studioLevel() >= 1) return { brown: 0.40, rain: 0.32 };
+    return { brown: 0.55 };
+  }
+
+  function syncAmbientButton() {
+    var button = $("#ambientBtn");
+    if (button) button.textContent = ambient ? "Stop sound" : "Ambient sound";
+  }
+
+  function stopAmbient() {
+    if (ambient) {
+      var handle = ambient;
+      ambient = null;
+      handle.stop();
+    }
+    if (window.FFSound) {
+      try { window.FFSound.stop(); } catch (err) {}
+    }
+    syncAmbientButton();
+  }
+
+  function startAmbient(mix, withGenerative) {
+    if (!window.FFSound) {
+      toast("Focus Studio needs a modern browser with Web Audio.");
+      return false;
+    }
+    var store = window.FFStore;
+    var settings = store.state().settings;
+    var clean = filterMix(mix || settings.soundMix);
+    var generative = !!withGenerative && studioLevel() >= 2;
+    if (!hasMix(clean) && !generative) {
+      toast("Choose at least one sound first.");
+      return false;
+    }
+    try {
+      window.FFSound.play(clean, settings.masterVolume, generative);
+    } catch (err) {
+      toast("Audio is blocked in this browser - try Chrome or Edge.");
+      return false;
+    }
+    if (!ambient) {
+      ambient = {
+        stop: function () {
+          try { window.FFSound.stop(); } catch (err) {}
+          ambient = null;
+          syncAmbientButton();
+        }
+      };
+    }
+    if (!settings.sound) store.setSetting("sound", true);
+    syncAmbientButton();
+    return true;
+  }
+
+  function toggleAmbient() {
+    if (ambient) {
+      stopAmbient();
+      toast("Sound off.");
+      return;
+    }
+    var store = window.FFStore;
+    var settings = store.state().settings;
+    var mix = filterMix(settings.soundMix);
+    if (!hasMix(mix)) {
+      mix = filterMix(defaultMix());
+      store.setSound(mix, "custom", settings.masterVolume, settings.generative);
+    }
+    if (startAmbient(mix, settings.generative)) {
+      toast("Focus Studio is on. Open it to shape the room.");
+    }
+  }
+
+  function renderSoundStudio() {
+    if (!window.FFStore || !window.FFStore.state() || !window.FFSound) return;
+    var store = window.FFStore;
+    var settings = store.state().settings;
+    var mix = settings.soundMix || {};
+    var grid = $("#soundGrid");
+    if (!grid) return;
+    grid.textContent = "";
+
+    Object.keys(window.FFSound.SOUNDS).forEach(function (id) {
+      var meta = window.FFSound.SOUNDS[id];
+      var allowed = soundAllowed(id);
+      var active = allowed && Number(mix[id]) > 0.001;
+      var card = el("div", "sound-card" + (active ? " is-active" : "") + (allowed ? "" : " is-locked"));
+      card.setAttribute("data-sound-card", id);
+
+      var power = el("button", "sound-power");
+      power.type = "button";
+      power.setAttribute("data-sound-toggle", id);
+      power.setAttribute("role", "switch");
+      power.setAttribute("aria-checked", active ? "true" : "false");
+      power.setAttribute("aria-label", "Toggle " + meta.name);
+      power.appendChild(el("span", "sound-icon", meta.icon));
+      var copy = el("span", "sound-copy");
+      copy.appendChild(el("b", null, meta.name));
+      copy.appendChild(el("small", null, meta.copy));
+      power.appendChild(copy);
+      var lock = el("span", "sound-lock", allowed ? "" : (window.FFAccess ? window.FFAccess.requireLabel("ambient." + (id === "brown" ? "basic" : "studio")) : "Plus"));
+      power.appendChild(lock);
+      card.appendChild(power);
+
+      var range = el("input", "sound-level");
+      range.type = "range";
+      range.min = "0";
+      range.max = "100";
+      range.step = "1";
+      range.value = String(Math.round((Number(mix[id]) || 0) * 100));
+      range.disabled = !allowed;
+      range.setAttribute("data-sound-level", id);
+      range.setAttribute("aria-label", meta.name + " volume");
+      card.appendChild(range);
+      grid.appendChild(card);
+    });
+
+    var presets = $("#studioPresets");
+    if (presets) {
+      presets.textContent = "";
+      STUDIO_PRESETS.forEach(function (preset) {
+        var allowed = window.FFAccess && window.FFAccess.can("ambient.studio");
+        var button = el("button", "preset-chip" + (allowed ? "" : " is-locked") + (settings.soundPreset === preset.id ? " is-current" : ""), preset.label);
+        button.type = "button";
+        button.setAttribute("data-preset", preset.id);
+        if (!allowed) {
+          var dot = el("span", "lock-dot");
+          button.appendChild(dot);
+          button.title = "Unlock with " + (window.FFAccess ? window.FFAccess.requireLabel("ambient.studio") : "Plus");
+        }
+        presets.appendChild(button);
+      });
+    }
+
+    var master = $("#masterVolume");
+    var masterLabel = $("#masterVolumeLabel");
+    if (master) master.value = String(Math.round((settings.masterVolume || 0) * 100));
+    if (masterLabel) masterLabel.textContent = Math.round((settings.masterVolume || 0) * 100) + "%";
+
+    var gen = $("#generativeBtn");
+    var genCard = $("#generativeCard");
+    var genAllowed = window.FFAccess && window.FFAccess.can("ambient.generative");
+    if (genCard) genCard.classList.toggle("is-locked", !genAllowed);
+    if (gen) {
+      gen.disabled = false;
+      gen.textContent = !genAllowed ? "Pro" : (settings.generative ? "Turn off" : "Turn on");
+      gen.setAttribute("aria-pressed", settings.generative ? "true" : "false");
+      if (!genAllowed) gen.title = "Generative music is part of Pro";
+    }
+
+    var play = $("#studioPlay");
+    if (play) play.textContent = ambient ? "Pause mix" : "Play mix";
+    var note = $("#studioNote");
+    if (note) {
+      if (studioLevel() >= 2) note.textContent = "Every sound is yours. Layer slowly, keep the master below 80%, and leave one channel quieter than the rest.";
+      else if (studioLevel() === 1) note.textContent = "The full eight-sound studio is yours. Pro adds generative music and a longer memory.";
+      else note.textContent = "Free includes brown noise. Plus opens all eight sounds, presets, and the mixer.";
+    }
+  }
+
+  function openFocusStudio() {
+    if (!window.FFStore || !window.FFStore.state()) return;
+    renderSoundStudio();
+    openModal("studioModal");
+  }
+
+  function chooseSound(id) {
+    if (!soundAllowed(id)) {
+      openPlanModal((window.FFSound.SOUNDS[id] ? window.FFSound.SOUNDS[id].name : "This sound") + " joins the studio on " + (window.FFAccess ? window.FFAccess.requireLabel("ambient.studio") : "Plus") + ".");
+      return;
+    }
+    var store = window.FFStore;
+    var settings = store.state().settings;
+    var mix = Object.assign({}, settings.soundMix);
+    mix[id] = Number(mix[id]) > 0.001 ? 0 : (id === "brown" ? 0.55 : 0.5);
+    store.setSound(mix, "custom", settings.masterVolume, settings.generative);
+    renderSoundStudio();
+    if (hasMix(filterMix(mix)) || settings.generative) startAmbient(mix, settings.generative);
+    else stopAmbient();
+  }
+
+  function setSoundLevel(id, value) {
+    if (!soundAllowed(id)) return;
+    var store = window.FFStore;
+    var settings = store.state().settings;
+    var mix = Object.assign({}, settings.soundMix);
+    mix[id] = Math.max(0, Math.min(1, Number(value) / 100));
+    store.setSound(mix, "custom", settings.masterVolume, settings.generative);
+    var card = document.querySelector('[data-sound-card="' + id + '"]');
+    if (card) {
+      var active = mix[id] > 0.001;
+      card.classList.toggle("is-active", active);
+      var toggle = card.querySelector("[data-sound-toggle]");
+      if (toggle) toggle.setAttribute("aria-checked", active ? "true" : "false");
+    }
+    if (hasMix(filterMix(mix)) || settings.generative) startAmbient(mix, settings.generative);
+    else stopAmbient();
+  }
+
+  function applyPreset(id) {
+    var preset = STUDIO_PRESETS.filter(function (item) { return item.id === id; })[0];
+    if (!preset) return;
+    if (!window.FFAccess || !window.FFAccess.can("ambient.studio")) {
+      openPlanModal("Presets and the full mixer are part of " + (window.FFAccess ? window.FFAccess.requireLabel("ambient.studio") : "Plus") + ".");
+      return;
+    }
+    var settings = window.FFStore.state().settings;
+    window.FFStore.setSound(preset.mix, preset.id, settings.masterVolume, settings.generative);
+    renderSoundStudio();
+    startAmbient(preset.mix, settings.generative);
+    toast(preset.label + " room loaded.");
+  }
+
+  function toggleGenerative() {
+    if (!window.FFAccess || !window.FFAccess.can("ambient.generative")) {
+      openPlanModal("Generative focus music is part of " + (window.FFAccess ? window.FFAccess.requireLabel("ambient.generative") : "Pro") + ".");
+      return;
+    }
+    var store = window.FFStore;
+    var settings = store.state().settings;
+    var next = !settings.generative;
+    store.setSound(settings.soundMix, settings.soundPreset, settings.masterVolume, next);
+    renderSoundStudio();
+    if (next) startAmbient(settings.soundMix, true);
+    else if (!startAmbient(settings.soundMix, false)) stopAmbient();
+    toast(next ? "Generative bed on." : "Generative bed off.");
+  }
+
+  function toggleStudioPlay() {
+    if (ambient) {
+      stopAmbient();
+      renderSoundStudio();
+      return;
+    }
+    var store = window.FFStore;
+    var settings = store.state().settings;
+    var mix = filterMix(settings.soundMix);
+    if (!hasMix(mix)) {
+      mix = filterMix(defaultMix());
+      store.setSound(mix, "custom", settings.masterVolume, settings.generative);
+    }
+    renderSoundStudio();
+    if (startAmbient(mix, settings.generative)) renderSoundStudio();
+  }
+
   /* ---------------- settings ---------------- */
   function renderSettings() {
     var store = window.FFStore;
@@ -1058,6 +1298,29 @@
     });
     $("#shieldBtn").addEventListener("click", enterShield);
     $("#ambientBtn").addEventListener("click", toggleAmbient);
+    $("#focusStudioBtn").addEventListener("click", openFocusStudio);
+    $("#soundGrid").addEventListener("click", function (event) {
+      var button = event.target.closest("[data-sound-toggle]");
+      if (button) chooseSound(button.getAttribute("data-sound-toggle"));
+    });
+    $("#soundGrid").addEventListener("input", function (event) {
+      var range = event.target.closest("[data-sound-level]");
+      if (range) setSoundLevel(range.getAttribute("data-sound-level"), range.value);
+    });
+    $("#studioPresets").addEventListener("click", function (event) {
+      var button = event.target.closest("[data-preset]");
+      if (button) applyPreset(button.getAttribute("data-preset"));
+    });
+    $("#generativeBtn").addEventListener("click", toggleGenerative);
+    $("#studioPlay").addEventListener("click", toggleStudioPlay);
+    $("#masterVolume").addEventListener("input", function () {
+      var store = window.FFStore;
+      var settings = store.state().settings;
+      var value = Number(this.value) / 100;
+      store.setSound(settings.soundMix, settings.soundPreset, value, settings.generative);
+      if (window.FFSound) window.FFSound.setMaster(value);
+      $("#masterVolumeLabel").textContent = Math.round(value * 100) + "%";
+    });
     $("#urgeBtn").addEventListener("click", function () {
       window.FFStore.addUrge("focus session");
       renderFocus();
@@ -1166,6 +1429,7 @@
     });
     $("#soundToggle").addEventListener("change", function () {
       window.FFStore.setSetting("sound", this.checked);
+      if (!this.checked) stopAmbient();
     });
     $("#notifyToggle").addEventListener("change", function () {
       var input = this;
@@ -1221,7 +1485,7 @@
     $("#deleteData").addEventListener("click", function () {
       confirmAction("Delete this account's data?", "Tasks, sessions, notes and goals stored on this device are erased. Export a backup first if you want a copy.", "Delete data", function () {
         timer.reset();
-        if (ambient) { ambient.stop(); ambient = null; $("#ambientBtn").textContent = "Ambient sound"; }
+        stopAmbient();
         window.FFStore.clearAll();
         applyTheme();
         renderFor(currentPage);
@@ -1309,7 +1573,7 @@
     await window.FFAuth.signOut();
     user = null;
     timer.reset();
-    if (ambient) { ambient.stop(); ambient = null; $("#ambientBtn").textContent = "Ambient sound"; }
+    stopAmbient();
     exitShield();
     closeModals();
     document.body.classList.remove("nav-open");

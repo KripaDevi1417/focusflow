@@ -37,7 +37,8 @@ Limits live in `js/config.js` (`FF_PLANS`). Feature gates live in `js/access.js`
 - Google OAuth and email six-digit OTP through Supabase.
 - Per-account local data store with JSON backup/import, CSV export (Plus) and delete-all.
 - Today: tasks, next-task card, done list, yesterday recap, streak, daily goal meter.
-- Focus: timer, SVG ring, pause/resume, fullscreen shield, tab-title countdown, spacebar shortcut, ambient brown noise, urge log, session history.
+- Focus: timer, SVG ring, pause/resume, fullscreen shield, tab-title countdown, spacebar shortcut, urge log, session history.
+- **Focus Studio:** eight synthesized layers (rain, ocean, brown, green, fire, night, wind, caf&eacute;), presets, master volume and a generative chord bed. Brown noise is free; the full studio is Plus; generative music is Pro.
 - Brain dump, goals, journal and insights.
 - Four real plan levels with monthly/yearly pricing and server-side plan read-back.
 - **Theme Studio:** Daylight, Midnight, Funky and Neon. Daylight and Midnight are free; Funky unlocks on Plus; Neon unlocks on Pro. Locked cards open the plan modal instead of pretending to work.
@@ -55,6 +56,22 @@ Limits live in `js/config.js` (`FF_PLANS`). Feature gates live in `js/access.js`
 
 Themes are implemented with CSS custom properties on `<html data-theme="...">`. No duplicate layouts, no component forks. `prefers-reduced-motion` is respected, and every theme keeps AA-readable text and controls.
 
+## Focus Studio
+
+| Layer | What it is | Plan |
+| --- | --- | --- |
+| Brown noise | Warm low-end hush; the free doorway | Free |
+| Rain | Soft rain on a window | Plus |
+| Ocean | Slow tide and wide horizon | Plus |
+| Green noise | Mid-frequency forest air | Plus |
+| Fireplace | Low crackle with occasional pops | Plus |
+| Night | Crickets and open air | Plus |
+| Wind | A long, clean gust | Plus |
+| Caf&eacute; | A distant room murmur | Plus |
+| Generative bed | Slow chord pad that never repeats a track | Pro |
+
+All nine voices are synthesized with the Web Audio API at run time. There are no audio files, no streaming requests and no per-track licences. The mixer and preset are written into the same local account record as tasks and sessions. Audio never autoplays: it starts from a tap, stops when a session completes, and stops on sign-out or delete-all. Presets and the full mixer are Plus; generative music is Pro. Plan checks are client-side presentation, not a security boundary.
+
 ## Data, privacy and security - the honest version
 
 - Each account has its own local data namespace. Other accounts on the same browser do not see it.
@@ -66,9 +83,9 @@ Themes are implemented with CSS custom properties on `<html data-theme="...">`. 
 
 ## Build order
 
-1. **Visual system + theme studio + access gating** - current step; live after deploy.
-2. **Focus Studio** - 8 synthesized soundscapes, mixer, presets, generative lo-fi pads, breathing ring, reduced-motion fallback.
-3. **Daily ritual + quests** - morning plan, shutdown review, one small quest, streak freeze.
+1. **Visual system + theme studio + access gating** - live.
+2. **Focus Studio** - live: 8 synthesized soundscapes, mixer, presets, generative lo-fi pads. Breathing-ring motion remains in step 3 polish.
+3. **Daily ritual + quests** - next: morning plan, shutdown review, one small quest, streak freeze.
 4. **Recurring tasks + templates + custom lengths** - Pro.
 5. **Advanced insights + heatmap + weekly review** - Pro.
 6. **Calendar export + command palette + session notes + distraction log** - Pro.
