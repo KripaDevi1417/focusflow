@@ -385,6 +385,7 @@
         applyTheme();
         renderChrome();
         renderFor(currentPage);
+        reconcileAudioPlan();
       }).catch(function () { /* local plan stays */ });
     }
     var target = options && options.welcome ? "today" : pageFromHash();
@@ -900,6 +901,15 @@
     return Object.keys(mix || {}).some(function (id) { return mix[id] > 0.001; });
   }
 
+  function reconcileAudioPlan() {
+    if (!ambient || !window.FFStore || !window.FFSound) return;
+    var settings = window.FFStore.state().settings;
+    var mix = filterMix(settings.soundMix);
+    var generative = !!settings.generative && studioLevel() >= 2;
+    if (hasMix(mix) || generative) startAmbient(mix, generative);
+    else stopAmbient();
+  }
+
   function defaultMix() {
     if (studioLevel() >= 2) return { brown: 0.35, rain: 0.30, green: 0.12 };
     if (studioLevel() >= 1) return { brown: 0.40, rain: 0.32 };
@@ -1163,6 +1173,7 @@
     closeModals();
     toast("Preview unlock: " + plan.name + ". Connect checkout in js/config.js before launch.");
     renderFor(currentPage);
+    reconcileAudioPlan();
   }
 
   function checkoutUrl(base) {
