@@ -1,88 +1,91 @@
-# FocusFlow features and plans
+# FocusFlow - features, plans and build status
 
-What ships today, what needs your keys, and what is deliberately phased. Prices are USD; monthly first, yearly in brackets.
+FocusFlow is a calm task manager for people whose brains have too many tabs open. The loop is: **capture -> choose -> shrink -> start -> protect -> recover -> review**. Prices are USD; monthly first, yearly in brackets.
 
 ## Plan matrix
 
-| Capability | Free | Plus $2 ($20) | Pro $3 ($30) | Premium $5 ($50) |
+| Capability | Free $0 | Plus $2 ($20/yr) | Pro $3 ($30/yr) | Premium $5 ($50/yr) |
 | --- | --- | --- | --- | --- |
 | Open tasks | 10 | Unlimited | Unlimited | Unlimited |
-| Focus sessions per day | 4 | Unlimited | Unlimited | Unlimited |
+| Focus sessions / day | 4 | Unlimited | Unlimited | Unlimited |
 | History | 7 days | 30 days | 1 year | 10 years |
 | Goals | 3 | 10 | Unlimited | Unlimited |
-| Session lengths | 25, 50 | 25, 50, 90 | 25, 50, 90 | 25, 50, 90 |
+| Session lengths | 25, 50 | 25, 50, 90 | 25, 50, 90 + custom | 25, 50, 90 + custom |
 | Fullscreen shield + tab countdown | Yes | Yes | Yes | Yes |
-| Streak | Yes | Yes | Yes; repair in Phase 2 | Yes; repair in Phase 2 |
-| Ambient soundscape | - | Yes | Yes | Yes |
+| Basic sound (brown noise) | Yes | Yes | Yes | Yes |
+| Sound studio + mixer | - | 8 sounds | Full mixer | Adaptive soundscapes |
+| Daily ritual + focus quests | - | Yes | Yes | Yes |
+| Themes | Daylight, Midnight | + Funky | + Neon | All + custom accents |
 | CSV export | - | Yes | Yes | Yes |
-| 30-day insights | - | Yes | Yes | Yes |
-| Smart step-split (AI) | - | - | Phase 2 | Phase 2 |
-| Calendar export | - | - | Phase 2 | Phase 2 |
-| Custom themes | - | - | Phase 2 | Phase 2 |
-| Accountability rooms | - | - | - | Phase 2 |
-| Weekly review email | - | - | - | Phase 2 |
-| Priority support / early access | - | - | - | Yes |
+| Advanced insights + heatmap | - | 30-day basics | Yes | Yes |
+| Recurring tasks + templates | - | - | Yes | Yes |
+| Calendar export (.ics) | - | - | Yes | Yes |
+| Command palette | - | - | Yes | Yes |
+| Generative focus music | - | - | Yes | Yes |
+| Streak freeze / repair | - | Freeze | Repair | Repair |
+| Smart Plan (AI step-split) | - | - | - | Fair use |
+| Cross-device sync | - | - | - | Yes |
+| Focus rooms (silent co-work) | - | - | - | Yes |
+| Weekly review | - | - | Yes | Yes |
+| Priority support / early access | - | - | Priority | Priority + early access |
 
-Limits are enforced in `js/app.js` and defined once in `js/config.js` (`FF_PLANS`). Change a number there and the UI, the gates and the plan modal follow.
+Limits live in `js/config.js` (`FF_PLANS`). Feature gates live in `js/access.js` (`FFAccess`). Change a level or a feature minimum in one place and the UI, gates and upgrade prompt follow.
 
-## Working now
+## What is live now
 
-- Landing page, responsive layout, light and dark themes.
-- Two-step auth: Google OAuth and email sign-in through Supabase when configured; six-digit codes require custom SMTP, while the default free-tier email sends a link the app also accepts. On-screen codes remain the preview fallback.
-- Per-account local storage with JSON export and import, CSV export (Plus) and delete.
+- Landing page with scroll reveals, responsive layout and a premium editorial look.
+- Google OAuth and email six-digit OTP through Supabase.
+- Per-account local data store with JSON backup/import, CSV export (Plus) and delete-all.
 - Today: tasks, next-task card, done list, yesterday recap, streak, daily goal meter.
-- Focus: 25/50/90 timer, SVG ring, pause/resume, fullscreen shield, tab-title countdown, spacebar shortcut, ambient brown noise, urge log, session history.
-- Brain dump with promote-to-task.
-- Goals with horizon and why.
-- Journal: one card per active day, minutes, sessions, tasks, a one-line note.
-- Insights: 7/30-day chart, average, completion rate, observations.
-- Settings: theme, goal, sound preference, notifications, export/import, plan, sign out, delete data.
-- Four plans with real gating, monthly/yearly checkout links, server-side plan sync and a billing-portal option.
+- Focus: timer, SVG ring, pause/resume, fullscreen shield, tab-title countdown, spacebar shortcut, ambient brown noise, urge log, session history.
+- Brain dump, goals, journal and insights.
+- Four real plan levels with monthly/yearly pricing and server-side plan read-back.
+- **Theme Studio:** Daylight, Midnight, Funky and Neon. Daylight and Midnight are free; Funky unlocks on Plus; Neon unlocks on Pro. Locked cards open the plan modal instead of pretending to work.
+- **Plan-aware theme fallback:** if a paid plan expires, a paid theme falls back to Daylight rather than leaking a paid look.
 - Plain-language privacy policy and terms.
 
-## Needs your configuration
+## Theme Studio
 
-- Real email delivery (Supabase + SMTP).
-- Google sign-in (Google Cloud + Supabase provider).
-- Live payments (Stripe or Razorpay links plus a plan-granting webhook).
+| Theme | Mood | Plan |
+| --- | --- | --- |
+| Daylight | Warm paper, ink, soft blue. Editorial calm. | Free |
+| Midnight | Gold on charcoal. Low-light deep work. | Free |
+| Funky | Cream, hot pink, electric blue, acid lime, chunky black borders and offsets. Gen Z energy without hiding the task. | Plus |
+| Neon | Aubergine black, acid lime and pink glow. Late-night focus. | Pro |
 
-Not built yet: cross-device sync. The schema and RLS policies are ready, but the client remains local-first; do not advertise sync until it ships.
+Themes are implemented with CSS custom properties on `<html data-theme="...">`. No duplicate layouts, no component forks. `prefers-reduced-motion` is respected, and every theme keeps AA-readable text and controls.
 
-## Phase 2 - the honest roadmap
+## Data, privacy and security - the honest version
 
-1. **Sync layer**: replace `FFStore` internals with Supabase queries, keep the same API so the UI does not change. Conflict rule: last write wins per row, day rows are merged.
-2. **AI step-split**: send only the task title to a small model, return three concrete first steps. Gate at Pro. Never send history or journal notes.
-3. **Calendar export**: generate an `.ics` with focus blocks and deadlines. Pro.
-4. **Accountability rooms**: 2-5 person silent co-working sessions with start/stop presence. Premium. No chat by default.
-5. **Weekly review email**: Sunday summary of minutes, tasks, urges and the next task. Premium, opt-in, one click unsubscribe.
-6. **App blocking**: native only. A web app cannot block other apps; be explicit about that instead of pretending a timer is a blocker.
+- Each account has its own local data namespace. Other accounts on the same browser do not see it.
+- Supabase schema has six tables (`profiles`, `tasks`, `sessions`, `days`, `goals`, `dumps`), row-level security, a signup trigger and a plan guard. Authenticated grants are enabled.
+- The client is **local-first today**. Cross-device sync is Premium and is not shipped yet; do not advertise it as live until it is.
+- Plan is read from the `profiles` row when signed in. Client-side plan changes are preview-only and are not a payment system.
+- Payments are not connected yet. Razorpay requires owner KYC, then a server-side webhook must grant entitlements. Until then, plan changes are explicitly labelled preview.
+- No ads, no selling behavioural data, no public profiles, no leaderboards.
+
+## Build order
+
+1. **Visual system + theme studio + access gating** - current step; live after deploy.
+2. **Focus Studio** - 8 synthesized soundscapes, mixer, presets, generative lo-fi pads, breathing ring, reduced-motion fallback.
+3. **Daily ritual + quests** - morning plan, shutdown review, one small quest, streak freeze.
+4. **Recurring tasks + templates + custom lengths** - Pro.
+5. **Advanced insights + heatmap + weekly review** - Pro.
+6. **Calendar export + command palette + session notes + distraction log** - Pro.
+7. **Smart Plan** - Premium, fair use, title-only by default, explicit consent before sending anything.
+8. **Real sync + focus rooms** - Premium; sync first, rooms after presence is reliable.
+9. **Payments + entitlement webhook** - owner KYC and server-side grant.
 
 ## Why this positioning
 
-The market is real and growing:
+- Study-planner apps were about **$2.7B in 2025**, projected to **$4.42B by 2034** at **11.2% CAGR**; roughly **64%** of revenue is freemium ([Dataintelo](https://dataintelo.com/report/study-planner-apps-market)).
+- About **238 million** post-secondary students worldwide. Password signup loses students; Google + email code is the shortest path in.
+- A 2025 meta-analysis of **71,633** university students found elevated odds of depression (OR 1.93) and eye strain (OR 1.96), with risk climbing after **2.5 hours/day** ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC13113371/)).
+- Competitor pricing leaves a gap: Opal ~$19.99/mo, Sunsama $17-$22/mo, Motion ~$19-$29/mo. FocusFlow starts at **$2**.
 
-- Study-planner apps were about **$2.7B in 2025**, projected to **$4.42B by 2034** at an **11.2% CAGR**; roughly **64%** of revenue is freemium and North America holds about **35%** ([Dataintelo](https://dataintelo.com/report/study-planner-apps-market)).
-- About **238 million** post-secondary students worldwide; the barrier is rarely demand, it is activation. Industry commentary argues password-based signup loses a large share of student users, which is why Google + email code is the only auth here ([Microniche Browser](https://www.micronichebrowser.com/blog/student-productivity-tools-untapped-saas-market)).
-- Screen time is not a moral panic: a 2025 meta-analysis of **71,633 university students** found elevated odds of depression (OR 1.93, 95% CI 1.75-2.12) and eye strain (OR 1.96), with risk climbing sharply after **2.5 hours a day** and about **15% per additional hour** ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC13113371/)).
+## Deliberately not doing
 
-Competitor pricing leaves a clear gap:
-
-- **Opal**: free with 3 rules; Pro around **$8.33/mo** billed yearly, **$19.99/mo** monthly, **$399** lifetime ([pricing](https://opalapp.com/pricing)).
-- **Freedom**: free basic blocking; Premium about **$3.33/mo** yearly, **$8.99/mo** monthly, lifetime around **$99** ([pricing](https://freedom.to/premium)).
-- **Sunsama**: **$17/mo** yearly, **$22/mo** monthly, 14-day trial ([pricing](https://www.sunsama.com/pricing)).
-
-The gap FocusFlow fills: a calm, anti-guilt system for students at **$2-$5 a month** that covers capture, starting, protecting, recovering and reflecting - not just blocking, and not a $17 project-management suite.
-
-## What FocusFlow deliberately does not do
-
-- No public profiles, followers, leaderboards or comparison.
-- No ads and no selling behavioural data.
 - No streak shaming, red debt counters or "you failed" copy.
-- No claim that a web timer blocks other apps. That needs a native build, and the copy says so.
-
-## Pricing rules
-
-- Prices may rise as the audience grows; existing subscribers keep the price they signed up at.
-- Regional and student pricing is applied at checkout, not by silently changing the listed price.
-- Yearly is roughly ten months for twelve: $20 / $30 / $50.
-- Cancel any time; access runs to the end of the paid period; export stays free.
+- No claim that a web timer blocks other apps. That needs a native build.
+- No public social graph, follower counts or comparison leaderboards.
+- No silent price changes for existing subscribers.

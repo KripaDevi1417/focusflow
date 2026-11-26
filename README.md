@@ -13,14 +13,15 @@ Live (GitHub Pages): <https://kripadevi1417.github.io/focusflow/>
 - **Landing page** with positioning, pricing, privacy and FAQ.
 - **Two-step sign-in** - Google OAuth, a six-digit email code, or a one-click email link. No passwords.
 - **App shell** with Today, Focus, Brain dump, Goals, Journal, Insights and Settings.
-- **Focus timer** - 25 / 50 / 90 minute sessions, SVG progress ring, tab-title countdown, fullscreen shield, brown-noise soundscape, spacebar start/pause.
+- **Focus timer** - 25 / 50 / 90 minute sessions (limits by plan), SVG progress ring, tab-title countdown, fullscreen shield, brown-noise soundscape, spacebar start/pause.
 - **Daily record** - minutes, sessions, tasks done and a one-line note per day; yesterday recap and streak.
 - **Brain dump** - park a thought, promote it into a task later.
 - **Urge log** - name the impulse instead of obeying it.
 - **Goals** with horizon and a why.
 - **Insights** - 7/30-day bar chart, honest averages, completion rate.
 - **Privacy controls** - per-account storage, JSON backup and restore, CSV export (Plus), delete-all.
-- **Free / Plus $2 / Pro $3 / Premium $5** tiers, with limits enforced in the app.
+- **Theme Studio** - Daylight, Midnight, Funky and Neon, with plan-aware locks and a graceful fallback if a paid plan expires.
+- **Free / Plus $2 / Pro $3 / Premium $5** tiers, with limits enforced in the app and feature gates in `js/access.js`.
 - **Plain-language privacy policy and terms** in `privacy.html` and `terms.html`, linked from the footer and sign-in.
 
 ## Stack
@@ -32,13 +33,14 @@ Vanilla HTML, CSS and JavaScript. No build step, no framework, no npm install. C
 | `index.html` | Landing, auth, app shell, templates |
 | `privacy.html` | Privacy policy in plain language |
 | `terms.html` | Terms of use |
-| `styles.css` | Design system, light/dark themes, responsive layout |
+| `styles.css` | Design system, four themes, responsive layout |
 | `favicon.svg` | Brand icon used by every page |
 | `js/config.js` | Supabase keys, checkout links, billing portal, plan definitions |
+| `js/access.js` | Central feature entitlements and theme locks |
 | `js/auth.js` | Google OAuth, email OTP, session restore, preview fallback |
 | `js/store.js` | Per-account state, history, stats, export/import |
 | `js/timer.js` | Timestamp-based focus timer |
-| `js/app.js` | Routing, rendering, gating, modals, wiring |
+| `js/app.js` | Routing, rendering, theme studio, gating, modals, wiring |
 | `supabase/schema.sql` | Tables, indexes, RLS policies, plan guard |
 
 ## Run it locally
@@ -66,8 +68,8 @@ This is deliberate. A static page cannot send email or take payments by itself. 
 | --- | --- | --- |
 | Free | $0 | 10 open tasks, 4 sessions/day, 7-day history, 3 goals |
 | Plus | $2/mo ($20/yr) | Unlimited tasks and sessions, 30-day history, 10 goals, 90-min sessions, ambient sound, CSV export |
-| Pro | $3/mo ($30/yr) | Everything in Plus, 1-year history; AI step-split, calendar export, streak repair and themes are roadmap items |
-| Premium | $5/mo ($50/yr) | Everything in Pro, priority support, early access; rooms and weekly review are roadmap items |
+| Pro | $3/mo ($30/yr) | Everything in Plus, 1-year history, Neon theme, advanced insights, recurring tasks, templates, calendar export, command palette |
+| Premium | $5/mo ($50/yr) | Everything in Pro, 10-year history, Smart Plan, sync, focus rooms, adaptive soundscapes, early access |
 
 See [FEATURES.md](FEATURES.md) for exactly what ships now and what is phased, and for the market research behind the positioning.
 
@@ -81,9 +83,9 @@ GitHub Pages serves the repository root. Push these files to `main`, then **Sett
 
 ## Status
 
-- Working now: landing, preview auth, app, timer, history, goals, dump, insights, settings, plan gating, export/import, legal pages.
+- Working now: landing, real Google/email auth, app, timer, history, goals, dump, insights, settings, plan gating, four-theme studio, export/import, legal pages.
 - Needs your keys: email sign-in, Google OAuth, live checkout. Six-digit codes also need custom SMTP; the default Supabase email sends a link.
 - Not built yet: cross-device sync. The Postgres schema and RLS policies are included and ready; the client is local-first today.
-- Roadmap: sync, AI step-split, calendar feed, accountability rooms, weekly review email, native app blockers.
+- Roadmap: Focus Studio sounds, daily ritual, recurring tasks, calendar export, Smart Plan, sync, focus rooms, payments, native app blockers.
 
 Built for the person who is trying.

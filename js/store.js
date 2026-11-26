@@ -75,7 +75,7 @@ window.FFStore = (function () {
       if (value.settings && value.settings[k] !== undefined) settings[k] = value.settings[k];
     });
     value.settings = Object.assign({}, base.settings, settings);
-    if (["system", "light", "dark"].indexOf(value.settings.theme) === -1) value.settings.theme = "system";
+    if (["system", "light", "dark", "daylight", "midnight", "funky", "neon"].indexOf(value.settings.theme) === -1) value.settings.theme = "system";
     var goal = Number(value.settings.dailyGoal);
     value.settings.dailyGoal = isFinite(goal) && goal > 0 && goal <= 1440 ? goal : 120;
     value.settings.sound = !!value.settings.sound;

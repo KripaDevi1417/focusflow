@@ -26,6 +26,7 @@ window.FF_PLANS = {
   free: {
     id: "free",
     name: "Free",
+    level: 0,
     price: 0,
     yearly: 0,
     tagline: "The core loop, forever",
@@ -34,7 +35,7 @@ window.FF_PLANS = {
     sessionsPerDay: 4,
     goals: 3,
     minutes: [25, 50],
-    sound: false,
+    sound: true,
     export: false,
     ai: false,
     calendar: false,
@@ -47,6 +48,7 @@ window.FF_PLANS = {
   plus: {
     id: "plus",
     name: "Plus",
+    level: 1,
     price: 2,
     yearly: 20,
     tagline: "Unlimited focus, 30-day history",
@@ -59,8 +61,8 @@ window.FF_PLANS = {
     export: true,
     ai: false,
     calendar: false,
-    streakRepair: false,
-    themes: false,
+    streakRepair: true,
+    themes: true,
     rooms: false,
     weeklyReview: false,
     support: false
@@ -68,6 +70,7 @@ window.FF_PLANS = {
   pro: {
     id: "pro",
     name: "Pro",
+    level: 2,
     price: 3,
     yearly: 30,
     tagline: "Deep work and a year of evidence",
@@ -78,17 +81,18 @@ window.FF_PLANS = {
     minutes: [25, 50, 90],
     sound: true,
     export: true,
-    ai: true,
+    ai: false,
     calendar: true,
     streakRepair: true,
     themes: true,
     rooms: false,
-    weeklyReview: false,
-    support: false
+    weeklyReview: true,
+    support: true
   },
   premium: {
     id: "premium",
     name: "Premium",
+    level: 3,
     price: 5,
     yearly: 50,
     tagline: "Accountability and priority support",

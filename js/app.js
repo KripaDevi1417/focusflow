@@ -60,7 +60,9 @@
 
   function openModal(id) {
     var node = document.getElementById(id);
-    if (!node || !node.hidden) return;
+    if (!node) return;
+    if (activeModal && activeModal !== node) activeModal.hidden = true;
+    if (!node.hidden) return;
     modalReturnFocus = document.activeElement;
     activeModal = node;
     node.hidden = false;
@@ -77,14 +79,35 @@
     modalReturnFocus = null;
   }
 
+  var THEMES = {
+    daylight: { name: "Daylight", copy: "Warm editorial calm" },
+    midnight: { name: "Midnight", copy: "Low-light deep work" },
+    funky: { name: "Funky", copy: "Chunky, playful, loud" },
+    neon: { name: "Neon", copy: "Late-night Gen Z glow" }
+  };
+
+  function resolvedTheme() {
+    if (!window.FFStore || !window.FFStore.state()) return "daylight";
+    var preference = window.FFStore.state().settings.theme || "system";
+    if (preference === "light") preference = "daylight";
+    if (preference === "dark") preference = "midnight";
+    if (preference === "system") {
+      preference = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "midnight" : "daylight";
+    }
+    if (window.FFAccess && !window.FFAccess.themeAllowed(preference)) preference = "daylight";
+    return THEMES[preference] ? preference : "daylight";
+  }
+
   function applyTheme() {
     if (!window.FFStore || !window.FFStore.state()) return;
-    var preference = window.FFStore.state().settings.theme || "system";
-    var dark = preference === "dark";
-    if (preference === "system" && window.matchMedia) {
-      dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var theme = resolvedTheme();
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.style.colorScheme = (theme === "midnight" || theme === "neon") ? "dark" : "light";
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      var colors = { daylight: "#f7f4ee", midnight: "#0b0a0e", funky: "#fff6e9", neon: "#08040f" };
+      meta.setAttribute("content", colors[theme] || "#f7f4ee");
     }
-    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
   }
 
   function download(filename, text, type) {
@@ -123,6 +146,7 @@
     $("#authScreen").hidden = true;
     $("#app").hidden = true;
     $("#landing").hidden = false;
+    initReveals();
   }
 
   function setStep(step) {
@@ -351,6 +375,7 @@
       window.FFAuth.fetchPlan().then(function (remotePlan) {
         if (!remotePlan || !window.FF_PLANS[remotePlan] || remotePlan === window.FFStore.plan().id) return;
         window.FFStore.setPlan(remotePlan);
+        applyTheme();
         renderChrome();
         renderFor(currentPage);
       }).catch(function () { /* local plan stays */ });
@@ -526,6 +551,7 @@
   }
 
   function openPlanModal(reason) {
+    closeModals();
     renderPlanRows();
     $("#checkoutNote").textContent = reason || "Prices in USD. Cancel any time. Pro and Premium features ship in phases.";
     openModal("planModal");
@@ -834,11 +860,56 @@
     }
   }
 
+  /* ---------------- theme studio ---------------- */
+  function renderThemeStudio() {
+    if (!window.FFStore || !window.FFStore.state()) return;
+    var current = resolvedTheme();
+    $$("[data-theme-choice]").forEach(function (card) {
+      var id = card.getAttribute("data-theme-choice");
+      var allowed = !window.FFAccess || window.FFAccess.themeAllowed(id);
+      var isCurrent = id === current;
+      card.classList.toggle("is-locked", !allowed);
+      card.classList.toggle("is-current", isCurrent);
+      card.setAttribute("aria-pressed", isCurrent ? "true" : "false");
+      var lock = card.querySelector(".theme-lock");
+      if (lock) {
+        if (!allowed) lock.textContent = window.FFAccess.requireLabel("theme." + id);
+        else lock.textContent = isCurrent ? "Current" : "Included";
+      }
+      var copy = card.querySelector(".theme-copy small");
+      if (copy) copy.textContent = allowed ? (THEMES[id] ? THEMES[id].copy : "") : "Unlock with " + (window.FFAccess ? window.FFAccess.requireLabel("theme." + id) : "a paid plan");
+    });
+    var note = $("#themeNote");
+    if (note) {
+      note.textContent = window.FFAccess && window.FFAccess.level() > 0
+        ? "Your plan unlocks " + (window.FFAccess.can("theme.neon") ? "every atmosphere, including Neon." : "Funky. Neon joins on Pro.")
+        : "Daylight and Midnight are included on every plan. Funky joins on Plus, Neon on Pro.";
+    }
+  }
+
+  function openThemeStudio() {
+    if (!window.FFStore || !window.FFStore.state()) return;
+    renderThemeStudio();
+    openModal("themeModal");
+  }
+
+  function chooseTheme(id) {
+    if (!THEMES[id]) return;
+    if (window.FFAccess && !window.FFAccess.themeAllowed(id)) {
+      openPlanModal(THEMES[id].name + " is part of " + window.FFAccess.requireLabel("theme." + id) + ". It joins the same calm system, with a louder personality.");
+      return;
+    }
+    window.FFStore.setSetting("theme", id);
+    applyTheme();
+    renderThemeStudio();
+    renderSettings();
+    toast(THEMES[id].name + " is on. Same focus, different room.");
+  }
+
   /* ---------------- settings ---------------- */
   function renderSettings() {
     var store = window.FFStore;
     var settings = store.state().settings;
-    $("#themeSelect").value = settings.theme || "system";
     $("#goalSelect").value = String(settings.dailyGoal || 120);
     $("#soundToggle").checked = !!settings.sound;
     $("#notifyToggle").checked = !!settings.notify;
@@ -847,6 +918,7 @@
 
   function previewPlan(plan) {
     window.FFStore.setPlan(plan.id);
+    applyTheme();
     renderChrome();
     closeModals();
     toast("Preview unlock: " + plan.name + ". Connect checkout in js/config.js before launch.");
@@ -1079,10 +1151,13 @@
       }
     });
 
-    /* settings */
-    $("#themeSelect").addEventListener("change", function () {
-      window.FFStore.setSetting("theme", this.value);
-      applyTheme();
+    /* theme studio + settings */
+    $("#themeBtn").addEventListener("click", openThemeStudio);
+    $("#settingsTheme").addEventListener("click", openThemeStudio);
+    $$("[data-theme-choice]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        chooseTheme(button.getAttribute("data-theme-choice"));
+      });
     });
     $("#goalSelect").addEventListener("change", function () {
       window.FFStore.setSetting("dailyGoal", Number(this.value));
@@ -1238,12 +1313,33 @@
     exitShield();
     closeModals();
     document.body.classList.remove("nav-open");
+    document.documentElement.setAttribute("data-theme", "daylight");
     document.title = "FocusFlow - Make tomorrow easier";
     location.hash = "#/welcome";
     showLanding();
   }
 
+  var revealsReady = false;
+  function initReveals() {
+    if (revealsReady || !("IntersectionObserver" in window)) return;
+    revealsReady = true;
+    var targets = $$(".section-head, .problem-card, .feature-card, .price-card, .split-copy, .privacy-copy, .final-cta > *");
+    targets.forEach(function (node, index) {
+      node.classList.add("reveal");
+      node.style.transitionDelay = Math.min(index % 4, 3) * 60 + "ms";
+    });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    targets.forEach(function (node) { observer.observe(node); });
+  }
+
   function boot() {
+    document.documentElement.classList.add("js");
     try { pendingPlan = sessionStorage.getItem("ff.pendingPlan.v1") || null; } catch (err) { pendingPlan = null; }
     wireAuth();
     wireApp();

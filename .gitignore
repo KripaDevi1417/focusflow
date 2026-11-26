@@ -4,6 +4,7 @@
 .pycheck/
 .ptc-repl-*
 .ff-deploy/
+showcase/
 .DS_Store
 Thumbs.db
 desktop.ini
